@@ -3,7 +3,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-// outline 알고리즘 sobel, laplacian, canny...
+// outline 알고리즘 sobel, laplacian, canny... :P
 
 public class day1 : MonoBehaviour {
     [SerializeField] private Texture2D texture;
