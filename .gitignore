@@ -9,8 +9,6 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
-/[Pp]ackages/
-/[Tt]extMesh Pro/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
@@ -73,3 +71,9 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# npm, TextMehs Pro 관련 제외
+/[Aa]ssets/[Pp]ackages.meta
+/[Aa]ssets/[Pp]ackages/*
+/[Aa]ssets/[Tt]extMesh Pro.meta
+/[Aa]ssets/[Tt]extMesh Pro/*
