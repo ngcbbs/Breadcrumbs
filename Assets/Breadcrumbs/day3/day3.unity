@@ -777,9 +777,9 @@ MonoBehaviour:
   worldSize:
     value: {x: 32, y: 32}
   minRoomSize:
-    value: {x: 4, y: 4}
+    value: {x: 2, y: 2}
   minRoomCount:
-    value: 16
+    value: 12
   roomColor:
     value: {r: 1, g: 0.6261432, b: 0, a: 0.87058824}
   hideRoomColor:

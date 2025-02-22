@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using day3_scap;
+using NUnit.Framework.Internal;
 using R3;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -26,7 +29,6 @@ public class day3 : MonoBehaviour {
     // hum..
     [SerializeField] private Button generateButton;
     
-    private DelaunayTriangulation _delaunayTriangulation = new(); 
     private readonly int _colorId = Shader.PropertyToID("_Color");
     private Material[] _materials;
 
@@ -100,7 +102,7 @@ public class day3 : MonoBehaviour {
 
         var center = worldSize.Value / 2;
         theWorld.localPosition = new Vector3(center.x, -1, center.y);
-        theWorld.localScale = new Vector3(worldSize.Value.x, -1, worldSize.Value.y);
+        theWorld.localScale = new Vector3(worldSize.Value.x, 0.1f, worldSize.Value.y);
         var mat = theWorld.GetComponent<MeshRenderer>();
         mat.sharedMaterial = _materials[0];
         
@@ -114,8 +116,26 @@ public class day3 : MonoBehaviour {
         _materials[2].SetColor(_colorId, hideRoomColor.Value);
         _materials[3].SetColor(_colorId, wayColor.Value);
     }
+    
+    private List<Vector2Int> _gizmoPoints = new();
+    private List<MSTPrims.Edge> _gizmoEdges;
+    private MSTPrims _mst = new MSTPrims();
+    private day3_scap.Grid _grid;
+    private day3_scap.AStar _astar;
 
     private void GenerateRooms() {
+        GC.Collect();
+        
+        _gizmoPoints.Clear();
+
+        _grid ??= new day3_scap.Grid();
+        _astar ??= new AStar(_grid);
+        _grid.Clear();
+        for (var y = 0; y < worldSize.Value.y; y++) {
+            for (var x = 0; x < worldSize.Value.x; x++)
+                _grid.SetWalkable(new Vector2Int(x, y));
+        }
+        
         _rooms.Clear();
         for (int i = 0; i < minRoomCount.Value; i++) {
             var size = RandomRoomSize;
@@ -144,15 +164,55 @@ public class day3 : MonoBehaviour {
             var size = room.Size;
             var position = room.Position;
             var hide = room.Hide;
-            
+
+            if (!hide) {
+                _gizmoPoints.Add(room.Position);
+                var halfSize = room.Size / 2;
+                var min = room.Position - halfSize;
+                var max = room.Position + halfSize;
+                for (var y = min.y; y <= max.y; y++) {
+                    for (var x = min.x; x <= max.x; x++)
+                        _grid.SetWalkable(new Vector2Int(x, y), true, TileType.Room);        
+                }
+            }
+
             var instance = GameObject.CreatePrimitive(PrimitiveType.Cube);
             instance.transform.SetParent(theRooms, false);
             instance.transform.localPosition = new Vector3(position.x, 0, position.y);
-            instance.transform.localScale = new Vector3(size.x, 1, size.y);
+            instance.transform.localScale = new Vector3(size.x, hide ? 0.5f : 1, size.y);
             
             var meshRenderer = instance.GetComponent<MeshRenderer>();
             meshRenderer.sharedMaterial = _materials[hide ? 2 : 1];
+            meshRenderer.shadowCastingMode = hide ? ShadowCastingMode.Off : ShadowCastingMode.On;
         }
+        
+        _gizmoEdges = _mst.FindMST(_gizmoPoints);
+        
+        // todo: Additional edge processing is required for good path shape. but.. skip!!! :P
+
+        var pathNodeSize = Vector3.one * 0.5f;
+
+        foreach (var edge in _gizmoEdges) {
+            var path = _astar.FindPath(edge.From, edge.To);
+            if (path == null) {
+                Debug.Log("길찾기 실패.");
+                continue;
+            }
+
+            foreach (var node in path) {
+                var instance = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                instance.transform.SetParent(theWay, false);
+
+                instance.transform.localPosition = new Vector3(node.Index.x, 0, node.Index.y);
+                instance.transform.localScale = pathNodeSize;
+
+                var meshRenderer = instance.GetComponent<MeshRenderer>();
+                meshRenderer.sharedMaterial = _materials[3];
+                meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
+            }
+        }
+        
+        GC.Collect();
     }
 
     private Vector2Int RandomRoomSize =>
@@ -179,28 +239,42 @@ public class day3 : MonoBehaviour {
         targets.Clear();
     }
 
-    private Vector3 P(Vector2Int pt) {
-        return new Vector3(pt.x, 0, pt.y);
+    private Vector3 P(Vector2Int pt, float height = 0f) {
+        return new Vector3(pt.x, height, pt.y);
     }
 
     private void OnDrawGizmos() {
+        const float height = 0.6f;
+        
         Gizmos.color = Color.yellow;
-        var points = new List<Vector2Int>();
-        foreach (var room in _rooms) {
-            var position = new Vector3(room.Position.x, 0, room.Position.y);
-            if (!room.Hide) {
-                points.Add(room.Position);
-                continue;
-            }
-            Gizmos.DrawWireSphere(position, 0.5f);
+        foreach (var room in _rooms.Where(room => !room.Hide)) {
+            Gizmos.DrawWireSphere(P(room.Position, height), 0.5f);
         }
 
-        // todo: 중복 제거.
-        var triangles = _delaunayTriangulation.Triangulation(points);
-        foreach (var triangle in triangles) {
-            Gizmos.DrawLine(P(triangle.a), P(triangle.b));
-            Gizmos.DrawLine(P(triangle.b), P(triangle.c));
-            Gizmos.DrawLine(P(triangle.c), P(triangle.a));
+        if (_gizmoEdges is { Count: > 0 }) {
+            Gizmos.color = Color.red;
+            foreach (var edge in _gizmoEdges) {
+                Gizmos.DrawLine(P(edge.From, height), P(edge.To, height));
+            }
         }
+
+        /*
+        if (_grid != null) {
+            foreach (var node in _grid.Nodes) {
+                switch (node.Value.TileType) {
+                    case TileType.Empty:
+                        Gizmos.color = Color.gray;
+                        break;
+                    case TileType.Room:
+                        Gizmos.color = Color.yellow;
+                        break;
+                    case TileType.Way:
+                        Gizmos.color = Color.blue;
+                        break;
+                }
+                Gizmos.DrawWireCube(P(node.Key, height), new Vector3(0.4f, 0.4f, 0.4f));
+            }
+        }
+        // */
     }
 }
