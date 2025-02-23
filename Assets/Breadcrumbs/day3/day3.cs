@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using day3_scap;
-using NUnit.Framework.Internal;
+using day3_scrap;
 using R3;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -23,14 +23,19 @@ public class day3 : MonoBehaviour {
     [Header("Default Settings")]
     [SerializeField] private Material defaultMaterial;
     [SerializeField] private Transform theWorld;
-    [SerializeField] private Transform theRooms;
-    [SerializeField] private Transform theWay;
+    [FormerlySerializedAs("theRooms")] [SerializeField] private Transform theRoomRoot;
+    [FormerlySerializedAs("theWay")] [SerializeField] private Transform theWayRoot;
 
     // hum..
     [SerializeField] private Button generateButton;
     
     private readonly int _colorId = Shader.PropertyToID("_Color");
     private Material[] _materials;
+    
+    // for day3
+    public Action<Vector3> OnGenerateDone;
+    public Transform RoomRoot => theRoomRoot;
+    public Transform WayRoot => theWayRoot;
 
     public class Room {
         public Vector2Int Position { get; private set; }
@@ -120,15 +125,15 @@ public class day3 : MonoBehaviour {
     private List<Vector2Int> _gizmoPoints = new();
     private List<MSTPrims.Edge> _gizmoEdges;
     private MSTPrims _mst = new MSTPrims();
-    private day3_scap.Grid _grid;
-    private day3_scap.AStar _astar;
+    private day3_scrap.Grid _grid;
+    private day3_scrap.AStar _astar;
 
     private void GenerateRooms() {
         GC.Collect();
         
         _gizmoPoints.Clear();
 
-        _grid ??= new day3_scap.Grid();
+        _grid ??= new day3_scrap.Grid();
         _astar ??= new AStar(_grid);
         _grid.Clear();
         for (var y = 0; y < worldSize.Value.y; y++) {
@@ -177,7 +182,7 @@ public class day3 : MonoBehaviour {
             }
 
             var instance = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            instance.transform.SetParent(theRooms, false);
+            instance.transform.SetParent(theRoomRoot, false);
             instance.transform.localPosition = new Vector3(position.x, 0, position.y);
             instance.transform.localScale = new Vector3(size.x, hide ? 0.5f : 1, size.y);
             
@@ -201,7 +206,7 @@ public class day3 : MonoBehaviour {
 
             foreach (var node in path) {
                 var instance = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                instance.transform.SetParent(theWay, false);
+                instance.transform.SetParent(theWayRoot, false);
 
                 instance.transform.localPosition = new Vector3(node.Index.x, 0, node.Index.y);
                 instance.transform.localScale = pathNodeSize;
@@ -211,6 +216,9 @@ public class day3 : MonoBehaviour {
                 meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
             }
         }
+        
+        var spawnPoint = P(_rooms[0].Position, 1.5f);
+        OnGenerateDone?.Invoke(spawnPoint);
         
         GC.Collect();
     }
@@ -226,8 +234,8 @@ public class day3 : MonoBehaviour {
     }
     
     private void Cleanup() {
-        Cleanup(theRooms);
-        Cleanup(theWay);
+        Cleanup(theRoomRoot);
+        Cleanup(theWayRoot);
     }
 
     private void Cleanup(Transform target) {

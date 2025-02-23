@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace day3_scap {
+namespace day3_scrap {
     public class MSTPrims {
         public class Edge {
             public Vector2Int From { get; set; }

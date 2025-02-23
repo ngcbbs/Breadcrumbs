@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace day3_scap {
+namespace day3_scrap {
 
     public enum TileType {
         Empty,
