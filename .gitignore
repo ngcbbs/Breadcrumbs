@@ -80,3 +80,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Pp]ackages/*
 /[Aa]ssets/[Tt]extMesh Pro.meta
 /[Aa]ssets/[Tt]extMesh Pro/*
+
+# 에셋 스토어 에셋 제외
+/[Aa]ssets/[Dd]ouble[Ll].meta
+/[Aa]ssets/[Dd]ouble[Ll]/*
