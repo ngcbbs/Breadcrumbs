@@ -4,3 +4,4 @@ daily breadcrumbs?
 - day2: sdf in texture.. :P
 - day3: 2d dungeon generation
 - day4: jumping in day3 :P
+- day5: animation setting practice (It's so bad and a mess >_<)
