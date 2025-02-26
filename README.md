@@ -1,5 +1,5 @@
 # Breadcrumbs
-daily breadcrumbs? (play with unity6)
+daily breadcrumbs? (Playing with Unity6 and GitHub)
 
 - day7: 옛날 네트워크 플레이 방식 테스트
    - UniTask Nuget을 통해서 설치하면 'error CS0117: 'UniTask' does not contain a definition for 'Delay'' 에러 발생
