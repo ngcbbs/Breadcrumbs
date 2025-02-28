@@ -1,6 +1,7 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- day9: TypeCache 에디터 상에서 타입 및 속성을 캐싱해주는 기능.. 툴 제작시 유용할듯!
 - day8: Potential Field + ORCA 데모 (use RVO2 Library)
    - 유닛의 이동을 자연스럽게 하기 위한 알고리즘 적용 (여러가지 있지만 그중 하나..)
    - box 형식의 장애물에서 이상하게 동작 (추가 처리가 필요한가?!)
