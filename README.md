@@ -1,6 +1,8 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- day10: Netcode For GameObjects 테스트 with Jammo-Character :)
+   - https://github.com/mixandjam/Jammo-Character (캐릭터 github, 에셋 스토어에서도 사용가능)
 - day9: TypeCache 에디터 상에서 타입 및 속성을 캐싱해주는 기능.. 툴 제작시 유용할듯!
 - day8: Potential Field + ORCA 데모 (use RVO2 Library)
    - 유닛의 이동을 자연스럽게 하기 위한 알고리즘 적용 (여러가지 있지만 그중 하나..)
