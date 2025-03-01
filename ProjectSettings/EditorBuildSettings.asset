@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Breadcrumbs/day7/day7.unity
-    guid: d747a5cb52e5e294487fcacdf72d8eda
+    path: Assets/Breadcrumbs/day10/day10.unity
+    guid: cd062631b1b44ff4c8110666b292704d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
