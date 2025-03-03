@@ -1,6 +1,7 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- day12: play with Unity Behavior #2 and Trying Cursor AI
 - day11: play with Unity Behavior #1
 - day10: Netcode For GameObjects 테스트 with Jammo-Character :)
    - https://github.com/mixandjam/Jammo-Character (캐릭터 github, 에셋 스토어에서도 사용가능)
