@@ -1,6 +1,7 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- day13: sensor attempt #1
 - day12: play with Unity Behavior #2 and Trying Cursor AI
 - day11: play with Unity Behavior #1
 - day10: Netcode For GameObjects 테스트 with Jammo-Character :)
