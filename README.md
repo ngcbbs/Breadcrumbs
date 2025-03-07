@@ -1,6 +1,7 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- day16: 캐릭터 설정 연습.
 - day15: trying.. Flow Field
 - day14: play with UniGif (자잘하게 뷰어와 다른 부분들이 많음)
 - day13: sensor attempt #1
