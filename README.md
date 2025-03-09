@@ -1,6 +1,8 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- day17: custom post processing 테스트
+  (유니티6 부터는 이전에 사용하던 RenderPass 부분 사용하지 않도록 변경됨, RenderGraph 사용하도록 권장함)
 - day16: 캐릭터 설정 연습.
 - day15: trying.. Flow Field
 - day14: play with UniGif (자잘하게 뷰어와 다른 부분들이 많음)
