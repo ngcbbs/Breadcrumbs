@@ -3,6 +3,9 @@ daily breadcrumbs? (Playing with Unity6 and GitHub)
 
 - day17: custom post processing 테스트
   (유니티6 부터는 이전에 사용하던 RenderPass 부분 사용하지 않도록 변경됨, RenderGraph 사용하도록 권장함)
+  (쉐이더 그래프를 통해서 효과 제작도 가능. Blit용 쉐이더 인자만 통일해 주면 FullScreen 쉐이더로 대응됨)
+
+![retroCrt](./Images/RetroCRT.png)
 - day16: 캐릭터 설정 연습.
 - day15: trying.. Flow Field
 - day14: play with UniGif (자잘하게 뷰어와 다른 부분들이 많음)
