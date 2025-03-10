@@ -1,6 +1,7 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- day18: 쉐이더 작업 해보기.. 흠~
 - day17: custom post processing 테스트
   (유니티6 부터는 이전에 사용하던 RenderPass 부분 사용하지 않도록 변경됨, RenderGraph 사용하도록 권장함)
   (쉐이더 그래프를 통해서 효과 제작도 가능. Blit용 쉐이더 인자만 통일해 주면 FullScreen 쉐이더로 대응됨)
