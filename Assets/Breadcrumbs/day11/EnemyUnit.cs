@@ -121,8 +121,10 @@ namespace Breadcrumbs.day11 {
             // 죽음 이벤트 호출
             OnUnitDied?.Invoke(this);
 
+            SetTarget(null);
+
             // 오브젝트 파괴 (딜레이를 주어 사망 애니메이션이 재생될 수 있도록 함)
-            Destroy(gameObject, 1.5f);
+            Destroy(gameObject, 0.2f);
         }
     }
 }

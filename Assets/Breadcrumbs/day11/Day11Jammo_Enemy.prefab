@@ -5611,7 +5611,7 @@ GameObject:
   - component: {fileID: 3482719007675202917}
   m_Layer: 0
   m_Name: Day11Jammo_Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5771,8 +5771,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  moveSpeed: 3
+  moveSpeed: 1
   behaviorGraph: {fileID: 3482719007675202917}
+  controller: {fileID: 0}
 --- !u!114 &3482719007675202917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5789,6 +5790,7 @@ MonoBehaviour:
   m_Graph: {fileID: -4001991557265918644, guid: 5a86f38acb7f72a4aaed798837749d9a, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 9214473745771266465
+  - rid: 9214473951572131922
   m_IsInitialised: 0
   m_IsStarted: 0
   NetcodeRunOnlyOnOwner: 0
@@ -5803,3 +5805,11 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 9171408989714616211}
+    - rid: 9214473951572131922
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 2680867818041362057
+          m_Value1: 4519084255831725915
+        Name: MoveSpeed
+        m_Value: 1
