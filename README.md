@@ -1,6 +1,8 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- day19: Anyway, try adding lasers and arrows... 
+  (Now, I'm going to trim what's made of Ai.)
 - day18: 쉐이더 작업 해보기.. 흠~
 - day17: custom post processing 테스트
   (유니티6 부터는 이전에 사용하던 RenderPass 부분 사용하지 않도록 변경됨, RenderGraph 사용하도록 권장함)
