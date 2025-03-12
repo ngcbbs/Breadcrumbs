@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Breadcrumbs.Common;
 using UnityEngine;
 
-namespace Breadcrumbs.day19 {
+namespace Breadcrumbs.day20 {
     public class ArrowLauncherWithPooling : MonoBehaviour {
         public GameObject arrowPrefab;
         public Transform firePoint;
@@ -17,6 +17,7 @@ namespace Breadcrumbs.day19 {
         [SerializeField]
         [Range(0.05f, 1f)]
         private float launchInterval = 0.2f;
+        [SerializeField] private float drag = 0.01f;
         private float _fireInterval = 0.2f;
         
         private Launcher _launcher;
@@ -49,17 +50,22 @@ namespace Breadcrumbs.day19 {
         void LaunchArrow() {
             GameObject arrow = GetPooledArrow();
             if (arrow != null) {
-                arrow.transform.position = firePoint.position;
-                arrow.transform.rotation = firePoint.rotation;
+                var launcherInfo = _launcher != null ? 
+                    _launcher.GetLauncherInfo() : 
+                    (firePoint.position, firePoint.rotation, firePoint.forward);
+                arrow.transform.position = launcherInfo.position;
+                arrow.transform.rotation = launcherInfo.rotation;
 
+                /*
                 Rigidbody rb = arrow.GetComponent<Rigidbody>();
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
                 rb.linearVelocity = (firePoint.forward + firePoint.up * 0.1f) * arrowSpeed;
+                // */
 
                 arrow.SetActive(true);
                 // 화살 활성화 시 타이머 시작
-                arrow.GetComponent<Arrow>().Activate();
+                arrow.GetComponent<Arrow>().Activate(arrowSpeed, drag, launcherInfo.forward);
             }
         }
 
@@ -72,7 +78,7 @@ namespace Breadcrumbs.day19 {
                 }
             }
 
-            Debug.LogWarning("사용 가능한 화살이 없습니다. 풀 크기를 늘리세요!");
+//            Debug.LogWarning("사용 가능한 화살이 없습니다. 풀 크기를 늘리세요!");
             return null;
         }
 
