@@ -1,9 +1,10 @@
+using Breadcrumbs.Common;
 using Breadcrumbs.day11;
 using UnityEngine;
 
 namespace Breadcrumbs.day20 {
-    public class Arrow : MonoBehaviour {
-        public ArrowLauncherWithPooling launcher;
+    public class Arrow : MonoBehaviour, IPoolable {
+        //public ArrowLauncher launcher;
         private float lifetime = 0f;
         private bool isActive = false;
         private const float MAX_LIFETIME = 5f;
@@ -36,7 +37,7 @@ namespace Breadcrumbs.day20 {
             if (isActive) {
                 lifetime += Time.deltaTime;
                 if (lifetime >= MAX_LIFETIME) {
-                    launcher.DisableArrow(gameObject);
+                    ArrowPoolManager.Instance.Release(this);
                     isActive = false;
                 }
             }
@@ -76,7 +77,7 @@ namespace Breadcrumbs.day20 {
 
             // 바닥에 닿았을 때 (Layer 사용을 권장하지만 여기서는 태그로 예시)
             if (collision.gameObject.CompareTag("Ground")) {
-                launcher.DisableArrow(gameObject);
+                ArrowPoolManager.Instance.Release(this);
                 isActive = false;
                 _stuck = true;
                 Debug.Log("스턱!");
@@ -86,9 +87,16 @@ namespace Breadcrumbs.day20 {
                 Debug.Log($"Enemy {collision.gameObject.name} hit by arrow at {Time.time}");
                 var enemy = collision.gameObject.GetComponent<EnemyUnit>();
                 enemy?.Die();
-                launcher.DisableArrow(gameObject);
+                ArrowPoolManager.Instance.Release(this);
                 isActive = false;
             }
+        }
+
+        public void OnSpawn() {
+            Debug.Log($"OnSpawn {name}");
+        }
+        public void OnDespawn() {
+            Debug.Log($"OnDespawn {name}");
         }
     }
 }
