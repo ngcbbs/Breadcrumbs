@@ -1,6 +1,7 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- day20: working on arrow card? v2 :P
 - day19: Anyway, try adding lasers and arrows... 
   (Now, I'm going to trim what's made of Ai.)
 - day18: 쉐이더 작업 해보기.. 흠~
