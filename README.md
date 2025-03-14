@@ -1,6 +1,8 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- day22: um.. ObjectPoolManager buggy :P
+  (테스트 코드의 필요성+1)
 - day21: day20 ArrowLauncher 수정.
 - day20: working on arrow card? v2 :P
 - day19: Anyway, try adding lasers and arrows... 
