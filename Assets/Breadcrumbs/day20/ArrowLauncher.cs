@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using Breadcrumbs.Common;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Breadcrumbs.day20 {
     public class ArrowLauncher : MonoBehaviour {
-        public GameObject arrowPrefab;
         public Transform firePoint;
         public float arrowSpeed = 20f;
 
@@ -40,7 +39,7 @@ namespace Breadcrumbs.day20 {
                 _launcher.GetLauncherInfo() : 
                 (firePoint.position, firePoint.rotation, firePoint.forward);
 
-            var arrowItem = ArrowPoolManager.Instance.Get(
+            var arrowItem = ObjectPoolManager.Instance.Get<Arrow>(
                 launcherInfo.position,
                 launcherInfo.rotation,
                 null

@@ -37,7 +37,7 @@ namespace Breadcrumbs.day20 {
             if (isActive) {
                 lifetime += Time.deltaTime;
                 if (lifetime >= MAX_LIFETIME) {
-                    ArrowPoolManager.Instance.Release(this);
+                    ObjectPoolManager.Instance.Release(this);
                     isActive = false;
                 }
             }
@@ -77,26 +77,27 @@ namespace Breadcrumbs.day20 {
 
             // 바닥에 닿았을 때 (Layer 사용을 권장하지만 여기서는 태그로 예시)
             if (collision.gameObject.CompareTag("Ground")) {
-                ArrowPoolManager.Instance.Release(this);
+                ObjectPoolManager.Instance.Release(this);
                 isActive = false;
                 _stuck = true;
-                Debug.Log("스턱!");
+                //Debug.Log("스턱!");
             }
             // 적과 충돌했을 때
             else if (collision.gameObject.CompareTag("Enemy")) {
                 Debug.Log($"Enemy {collision.gameObject.name} hit by arrow at {Time.time}");
-                var enemy = collision.gameObject.GetComponent<EnemyUnit>();
-                enemy?.Die();
-                ArrowPoolManager.Instance.Release(this);
+                var unit = collision.gameObject.GetComponent<Unit>();
+                if (unit != null)
+                    ObjectPoolManager.Instance.Release(unit);
+                ObjectPoolManager.Instance.Release(this);
                 isActive = false;
             }
         }
 
         public void OnSpawn() {
-            Debug.Log($"OnSpawn {name}");
+            //Debug.Log($"OnSpawn {name}");
         }
         public void OnDespawn() {
-            Debug.Log($"OnDespawn {name}");
+            //Debug.Log($"OnDespawn {name}");
         }
     }
 }

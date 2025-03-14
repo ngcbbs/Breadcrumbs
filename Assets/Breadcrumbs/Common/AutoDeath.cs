@@ -11,13 +11,11 @@ namespace Breadcrumbs.Common {
         private async UniTaskVoid DoAutoDeath() {
             await UniTask.WaitForSeconds(interval);
             
-            // :(
-            var unit = GetComponentInParent<Unit>();
+            var unit = GetComponent<Unit>();
             if (unit != null) {
-                unit.OnUnitDiedInvoke();
+                // auto release..
+                ObjectPoolManager.Instance.Release(unit);
             }
-            
-            Destroy(gameObject);
         }
     }
 }

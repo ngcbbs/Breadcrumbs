@@ -351,7 +351,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dfcc3e9aa10499aad20cadf5d0b4d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrowPrefab: {fileID: 3874222579878642095, guid: f9d54762b80848f4497bcbbb86e44cac, type: 3}
   firePoint: {fileID: 637885138}
   arrowSpeed: 18
   autoFire: 1
@@ -444,55 +443,6 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &987327506
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 987327508}
-  - component: {fileID: 987327507}
-  m_Layer: 0
-  m_Name: ArrowPoolManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &987327507
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 987327506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d472eceb46e2727448db68071df9dbca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  config:
-    prefab: {fileID: 3874222579878642095, guid: f9d54762b80848f4497bcbbb86e44cac, type: 3}
-    defaultCapacity: 10
-    maxSize: 100
-    collectionChecks: 1
---- !u!4 &987327508
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 987327506}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -658,6 +608,59 @@ MonoBehaviour:
   maxSpawnCount: 32
   spawnInterval: 0.2
   showDebug: 1
+--- !u!1 &1884407059
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1884407061}
+  - component: {fileID: 1884407060}
+  m_Layer: 0
+  m_Name: ObjectPoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1884407060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884407059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b85b017f830c754dbdcaafb6e2dde8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialPools:
+  - prefab: {fileID: 3874222579878642095, guid: f9d54762b80848f4497bcbbb86e44cac, type: 3}
+    defaultCapacity: 20
+    maxSize: 100
+    collectionChecks: 1
+  - prefab: {fileID: 9171408989714616211, guid: 01d23c4b1cf629642aeb007acec5b92d, type: 3}
+    defaultCapacity: 32
+    maxSize: 32
+    collectionChecks: 1
+--- !u!4 &1884407061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884407059}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -667,4 +670,4 @@ SceneRoots:
   - {fileID: 1046880122}
   - {fileID: 1452305665}
   - {fileID: 637885138}
-  - {fileID: 987327508}
+  - {fileID: 1884407061}

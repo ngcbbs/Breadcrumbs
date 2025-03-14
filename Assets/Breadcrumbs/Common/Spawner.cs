@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -8,16 +9,33 @@ namespace Breadcrumbs.Common {
     public class Spawner : MonoBehaviour {
         [Header("Setting")]
         [SerializeField] public SpawnSetting spawnSetting;
-        [SerializeField] private GameObject[] prefabs;
+        [SerializeField] private GameObject[] prefabs; // 음...
         [SerializeField] private int maxSpawnCount = 10;
         [SerializeField] private float spawnInterval = 3f;
         [Header("Debug")]
         [SerializeField] public bool showDebug;
         
-        private readonly List<GameObject> _spawnedUnits = new ();
-        private int _currentSpawnCount = 0; // 현재 스폰된 유닛 수
+        // ObjectPoolManager 에서 사용 가능한 프리팹만.. (인스팩터에 등록 할때 체크 하는편이..)
+        private void CheckPrefabs() {
+            var usePrefabs = new List<GameObject>();
+            foreach (var prefab in prefabs) {
+                var components = prefab.GetComponents<Component>();
+                if (components.Any(x => x is IPoolable) == false) {
+                    Debug.LogWarning($"Prefab({prefab.name}) 오브젝트 풀에서 사용 가능한 프리팹이 아님.");
+                    continue;
+                }
+
+                var type = components.FirstOrDefault(x => x is IPoolable);
+                if (type == null)
+                    continue;
+                usePrefabs.Add(prefab);
+            }
+
+            prefabs = usePrefabs.ToArray();
+        }
 
         private void Start() {
+            CheckPrefabs();
             StartCoroutine(SpawnRoutine());
         }
         
@@ -26,12 +44,9 @@ namespace Breadcrumbs.Common {
                 yield return new WaitForSeconds(spawnInterval);
 
                 // 현재 스폰된 유닛 수가 최대 스폰 수보다 적을 때만 스폰
-                if (_currentSpawnCount < maxSpawnCount) {
+                if (ObjectPoolManager.Instance.Count<Unit>() < maxSpawnCount) {
                     SpawnUnit();
                 }
-
-                // 죽은 유닛 리스트에서 제거
-                CleanupDeadUnits();
             }
         }
         
@@ -42,30 +57,22 @@ namespace Breadcrumbs.Common {
             }
 
             var randomPosition = GetRandomSpawnPosition();
-            var selectedPrefab = prefabs[Random.Range(0, prefabs.Length)];
-            var spawnedUnit = Instantiate(selectedPrefab, randomPosition, Quaternion.identity);
-            _spawnedUnits.Add(spawnedUnit);
-            _currentSpawnCount++;
+            //var selectedPrefab = prefabs[Random.Range(0, prefabs.Length)]; // todo: fixme
+            // note: 타입으로 풀링 오브젝트를 특정하니 약간의 불편함이..
+            var unit = ObjectPoolManager.Instance.Get<Unit>(
+                randomPosition, Quaternion.identity
+            );
 
-            var unit = spawnedUnit.GetComponent<Unit>();
-            if (unit != null) {
-                unit.OnUnitDied += HandleUnitDied;
-                
-                // random direction
-                unit.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+            if (unit == null)
+                return;
+            
+            // random direction
+            unit.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
 
-                // :(
-                var autoDeath = unit.GetComponent<AutoDeath>();
-                if (autoDeath == null)
-                    unit.AddComponent<AutoDeath>();
-            }
-        }
-
-        private void HandleUnitDied(Unit unit) {
-            if (_spawnedUnits.Contains(unit.gameObject)) {
-                _currentSpawnCount--;
-                _spawnedUnits.Remove(unit.gameObject);
-            }
+            // :(
+            var autoDeath = unit.GetComponent<AutoDeath>();
+            if (autoDeath == null)
+                unit.AddComponent<AutoDeath>();
         }
 
         private Vector3 GetRandomSpawnPosition() {
@@ -87,15 +94,6 @@ namespace Breadcrumbs.Common {
             }
 
             return Vector3.zero;
-        }
-
-        private void CleanupDeadUnits() {
-            for (int i = _spawnedUnits.Count - 1; i >= 0; i--) {
-                if (_spawnedUnits[i] == null) {
-                    _spawnedUnits.RemoveAt(i);
-                    _currentSpawnCount--;
-                }
-            }
         }
         
         private void OnDrawGizmos() {
