@@ -2,8 +2,8 @@
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
 // TODO: github를 svn 처럼 저장소에서 업데이트 & 커밋 하는 방식으로 사용은 익숙해짐. 로컬 브렌치, 작업 비중을 늘려 보자!
- > Q: 커밋 로그에 Verified 표시 유무에 따른 의미!?
- > A: SSH 또는 GPG 키 등록시 올바른 소스에서 올라온 것으로 확인 가능한 기능인듯. (윈도우에서는 gpg4win 설치후 gui 프로그램인 Kleopatra 에서 생성 후 github 에 생성한 공개키를 추가 해야함)
+> Q: 커밋 로그에 Verified 표시 유무에 따른 의미!?
+> A: SSH 또는 GPG 키 등록시 올바른 소스에서 올라온 것으로 확인 가능한 기능인듯. (윈도우에서는 gpg4win 설치후 gui 프로그램인 Kleopatra 에서 생성 후 github 에 생성한 공개키를 추가 해야함)
 
 - day23: AutoDeath 동작 오류 수정. (로컬 커밋 2회후 푸시 테스트)
 - day22: um.. ObjectPoolManager buggy :P
