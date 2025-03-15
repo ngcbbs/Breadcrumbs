@@ -14,7 +14,6 @@ namespace Breadcrumbs.Common {
 
         private void OnDisable() {
             _cts?.Cancel();
-            Debug.Log($"Auto death disabled ({gameObject.name})");
         }
 
         private async UniTaskVoid DoAutoDeath(CancellationToken token) {
@@ -22,7 +21,6 @@ namespace Breadcrumbs.Common {
             
             var unit = GetComponent<Unit>();
             if (unit != null) {
-                // auto release..
                 ObjectPoolManager.Instance.Release(unit);
             }
         }
