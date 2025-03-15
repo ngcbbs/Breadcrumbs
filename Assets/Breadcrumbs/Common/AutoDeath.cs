@@ -1,15 +1,24 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Breadcrumbs.Common {
     public class AutoDeath : MonoBehaviour {
         [SerializeField] private float interval = 1f;
-        private void Start() {
-            DoAutoDeath().Forget();
+        private CancellationTokenSource _cts;
+
+        public void Initialize() {
+            _cts = new CancellationTokenSource();
+            DoAutoDeath(_cts.Token).Forget();
         }
 
-        private async UniTaskVoid DoAutoDeath() {
-            await UniTask.WaitForSeconds(interval);
+        private void OnDisable() {
+            _cts?.Cancel();
+            Debug.Log($"Auto death disabled ({gameObject.name})");
+        }
+
+        private async UniTaskVoid DoAutoDeath(CancellationToken token) {
+            await UniTask.WaitForSeconds(interval, true, 0f, token);
             
             var unit = GetComponent<Unit>();
             if (unit != null) {

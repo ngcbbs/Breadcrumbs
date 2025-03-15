@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,11 +45,19 @@ namespace Breadcrumbs.Common {
                 yield return new WaitForSeconds(spawnInterval);
 
                 // 현재 스폰된 유닛 수가 최대 스폰 수보다 적을 때만 스폰
+                var unitCount = ObjectPoolManager.Instance.Count<Unit>();
                 if (ObjectPoolManager.Instance.Count<Unit>() < maxSpawnCount) {
                     SpawnUnit();
                 }
             }
         }
+        
+#if UNITY_EDITOR
+        private void OnGUI() {
+            var unitCount = ObjectPoolManager.Instance.Count<Unit>();
+            GUI.Label(new Rect(10, 10, 200, 40), $"{unitCount}/{maxSpawnCount}");
+        }
+#endif
         
         private void SpawnUnit() {
             if (prefabs.Length == 0) {
@@ -66,13 +75,13 @@ namespace Breadcrumbs.Common {
             if (unit == null)
                 return;
             
+            unit.Initialize();
+            
             // random direction
             unit.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
 
-            // :(
-            var autoDeath = unit.GetComponent<AutoDeath>();
-            if (autoDeath == null)
-                unit.AddComponent<AutoDeath>();
+            var autoDeath = unit.GetOrAdd<AutoDeath>();
+            autoDeath.Initialize();
         }
 
         private Vector3 GetRandomSpawnPosition() {
