@@ -17,10 +17,7 @@ namespace Breadcrumbs.dots.dots {
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            // Queries for all Spawner components. Uses RefRW because this system wants
-            // to read from and write to the component. If the system only needed read-only
-            // access, it would use RefRO instead.
-            foreach (RefRW<Spawner> spawner in SystemAPI.Query<RefRW<Spawner>>())
+            foreach (var spawner in SystemAPI.Query<RefRW<Spawner>>())
             {
                 ProcessSpawner(ref state, spawner);
             }

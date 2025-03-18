@@ -1,13 +1,14 @@
 using Unity.Entities;
-using Unity.Transforms;
 using UnityEngine;
 
 namespace Breadcrumbs.dots.dots {
     class SpawnerAuthoring : MonoBehaviour {
+        public Transform firePoint;
         public GameObject Prefab;
+        public GameObject ArraowPrefab;
         public float SpawnRate;
     }
-    
+
     class SpawnerBaker : Baker<SpawnerAuthoring>
     {
         public override void Bake(SpawnerAuthoring authoring)
@@ -18,12 +19,15 @@ namespace Breadcrumbs.dots.dots {
                 // By default, each authoring GameObject turns into an Entity.
                 // Given a GameObject (or authoring component), GetEntity looks up the resulting Entity.
                 Prefab = GetEntity(authoring.Prefab, TransformUsageFlags.Dynamic),
+                ArrowPrefab = GetEntity(authoring.ArraowPrefab, TransformUsageFlags.Dynamic),
                 SpawnPosition = authoring.transform.position,
                 NextSpawnTime = 0.0f,
                 SpawnRate = authoring.SpawnRate,
+                // 화살 발사 방향 (고정만 되나?)
+                FirePosition = authoring.firePoint.position,
+                FireDirection = authoring.firePoint.forward, 
             });
-            //AddComponent(entity, new LocalTransform());
-            //Debug.Log("Bake Done... where at localTransform Play/Stop 시 각각 호출됨.");
+            // 플레이 모드 시작/종료시 각각 호출됨...
         }
     }
 }
