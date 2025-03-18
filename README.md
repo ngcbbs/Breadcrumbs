@@ -1,6 +1,8 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- let's git rebase test ! :)
+
 // TODO: github를 svn 처럼 저장소에서 업데이트 & 커밋 하는 방식으로 사용은 익숙해짐. 로컬 브렌치, 작업 비중을 늘려 보자!
 > Q: 커밋 로그에 Verified 표시 유무에 따른 의미!?
 > 
