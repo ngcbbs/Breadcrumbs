@@ -1,6 +1,7 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- 2025/03/21: ai 캐릭터 연기 지침 테스트
 - 2025/03/19: lm studio api 요청 테스트 (git rebase 뭔가 잘못했나? 브렌치 모양이 이상해졌네)
 - 2025/03/18: git rebase, arrow with dots entity fk!
 - let's git rebase test ! :)
