@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   url: http://localhost:5008/v1/chat/completions
-  jsonPayload: '{"key": "value"}'
+  message: "\uC5EC\uAE30\uB294 \uC5B4\uB514\uC9C0?"
 --- !u!4 &1046624540
 Transform:
   m_ObjectHideFlags: 0
