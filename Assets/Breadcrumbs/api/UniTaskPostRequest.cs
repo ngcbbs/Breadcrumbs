@@ -5,7 +5,6 @@ using System.Text;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Breadcrumbs.api {
     public class UniTaskPostRequest : MonoBehaviour {
@@ -171,7 +170,7 @@ namespace Breadcrumbs.api {
 - 행동 양식중에 표현 가능한 감정으로 분류 가능한 것이 있다면 !!감정!! 형식으로 표현해.
 - 궁금한게 있는지 묻는 표현은 하지 않아도 되. 네가 실제 연기자가 되어 꼭 이야기에 필요한 만큼만 이야기 해도 좋아.
 ";
-
+    
         ApiRequest CreateRequest(string userMessage) {
             if (string.IsNullOrEmpty(userMessage)) {
                 throw new ArgumentNullException(nameof(userMessage));
@@ -180,11 +179,11 @@ namespace Breadcrumbs.api {
             return new ApiRequest() {
                 model = "gemma-3-4b-it",
                 messages = new List<Message>() {
-                    new Message() {
+                    new() {
                         role = "system",
                         content = @AnneShirleyRole,
                     },
-                    new Message() {
+                    new() {
                         role = "user",
                         content = userMessage,
                     }
@@ -195,38 +194,20 @@ namespace Breadcrumbs.api {
             };
         }
 
-        void Update() {
-            if (Input.GetKeyDown(KeyCode.Space)) {
-                SendPostRequest().Forget();
-            }
+        public void SendRequest(string userMessage) {
+            SendPostRequest(userMessage).Forget();
         }
 
-        async UniTask SendPostRequest() {
-            var postData = JsonConvert.SerializeObject(CreateRequest(message));
+        async UniTask SendPostRequest(string userMessage) {
+            var postData = JsonConvert.SerializeObject(CreateRequest(userMessage));
 
-            using UnityWebRequest www = UnityWebRequest.Post(url, postData, "application/json");
-            www.downloadHandler = new DownloadHandlerBuffer();
-            //www.SetRequestHeader("Content-Type", "application/json");
-
-            try {
-                await www.SendWebRequest().ToUniTask();
-
-                if (www.result == UnityWebRequest.Result.Success) {
-                    Debug.Log("POST 요청 성공: " + www.downloadHandler.text);
-                    var response = JsonConvert.DeserializeObject<ApiResponse>(www.downloadHandler.text);
-                    if (response != null) {
-                        var firstChoice = response.choices.FirstOrDefault();
-                        if (firstChoice != null) {
-                            Debug.Log($"{firstChoice.message.content}");
-                        }
-                    }
+            var result = await WebPostRequest.PostAsync(url, postData);
+            if (!string.IsNullOrEmpty(result)) {
+                var response = JsonConvert.DeserializeObject<ApiResponse>(result);
+                var firstChoice = response.choices.FirstOrDefault();
+                if (firstChoice != null) {
+                    Debug.Log($"{firstChoice.message.content}");
                 }
-                else {
-                    Debug.LogError("POST 요청 실패: " + www.error);
-                }
-            }
-            catch (Exception e) {
-                Debug.LogError("POST 요청 중 오류 발생: " + e.Message);
             }
         }
     }
