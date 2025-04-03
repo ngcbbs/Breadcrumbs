@@ -5,7 +5,7 @@ daily breadcrumbs? (Playing with Unity6 and GitHub)
 - 2025/03/21: ai 캐릭터 연기 지침 테스트
 - 2025/03/19: lm studio api 요청 테스트 (git rebase 뭔가 잘못했나? 브렌치 모양이 이상해졌네)
 - 2025/03/18: git rebase, arrow with dots entity fk!
-- let's git rebase test ! :)
+- let's git rebase test ! :) yo
 
 // TODO: github를 svn 처럼 저장소에서 업데이트 & 커밋 하는 방식으로 사용은 익숙해짐. 로컬 브렌치, 작업 비중을 늘려 보자!
 > Q: 커밋 로그에 Verified 표시 유무에 따른 의미!?
