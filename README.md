@@ -5,7 +5,8 @@ daily breadcrumbs? (Playing with Unity6 and GitHub)
   - gpg4win 를 사용한 키 발급 및 github에 gpg 공개키 설정.
   - 발급받은 키를 사용한 git commit 설정 처리.
   - 참고: gpg4win, Kleopatra
-  - test with rider
+  - Github Desktop passed.
+  - Rider passed. !? :)
 - 2025/04/03: 텍스쳐 쉐이더 테스트
 - 2025/03/21: ai 캐릭터 연기 지침 테스트
 - 2025/03/19: lm studio api 요청 테스트 (git rebase 뭔가 잘못했나? 브렌치 모양이 이상해졌네)
