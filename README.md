@@ -1,17 +1,15 @@
 # Breadcrumbs
 daily breadcrumbs? (Playing with Unity6 and GitHub)
 
+- 2025/04/03: gpgsign 적용 테스트. commit 시 `Verified` 표시 되는 설정 완료.
+  - gpg4win 를 사용한 키 발급 및 github에 gpg 공개키 설정.
+  - 발급받은 키를 사용한 git commit 설정 처리.
+  - 참고: gpg4win, Kleopatra
 - 2025/04/03: 텍스쳐 쉐이더 테스트
 - 2025/03/21: ai 캐릭터 연기 지침 테스트
 - 2025/03/19: lm studio api 요청 테스트 (git rebase 뭔가 잘못했나? 브렌치 모양이 이상해졌네)
 - 2025/03/18: git rebase, arrow with dots entity fk!
 - let's git rebase test ! :) yo~
-
-// TODO: github를 svn 처럼 저장소에서 업데이트 & 커밋 하는 방식으로 사용은 익숙해짐. 로컬 브렌치, 작업 비중을 늘려 보자!
-> Q: 커밋 로그에 Verified 표시 유무에 따른 의미!?
-> 
-> A: SSH 또는 GPG 키 등록시 올바른 소스에서 올라온 것으로 확인 가능한 기능인듯. (윈도우에서는 gpg4win 설치후 gui 프로그램인 Kleopatra 에서 생성 후 github 에 생성한 공개키를 추가 해야함)
-
 - day23: AutoDeath 동작 오류 수정. (로컬 커밋 2회후 푸시 테스트)
 - day22: um.. ObjectPoolManager buggy :P
   (테스트 코드의 필요성+1)
