@@ -1,6 +1,7 @@
 # Breadcrumbs
-daily breadcrumbs? (Playing with Unity6 and GitHub)
+> Just dropping some breadcrumbs from my Unity6 + GitHub adventures.
 
+- 2025/04/05: one page dungeon 데이터 이해를 위한 테스트 코드.
 - 2025/04/03: gpgsign 적용 테스트. commit 시 `Verified` 표시 되는 설정 완료.
   - gpg4win 를 사용한 키 발급 및 github에 gpg 공개키 설정.
   - 발급받은 키를 사용한 git commit 설정 처리.
