@@ -1,6 +1,11 @@
 # Breadcrumbs
 > Just dropping some breadcrumbs from my Unity6 + GitHub adventures.
-
+- 2025/04/08: one page dungeon 데이터 이해 및 데이터 생성을 위한 테스트
+  - Rects 형식 수정 (rotunda 플래그 추가)
+  - KayKit Dungone Pack 에셋으로 룸 생성 테스트 -> Rects(룸?) 단위 생성 처리는 맞지 않는 것 같음.
+    - Rects 영역 설정에 의해 외벽 쪽으로 설정 되도록 수정 해야 할듯.
+    - 벽 생성세 임의 값 사용 부분 수정 필요 할듯?
+  - gpg키를 사용한 커밋을 하려면 gpg4win 인증서 관리 프로그램을 실행 해야함.
 - 2025/04/05: one page dungeon 데이터 이해를 위한 테스트 코드.
 - 2025/04/03: gpgsign 적용 테스트. commit 시 `Verified` 표시 되는 설정 완료.
   - gpg4win 를 사용한 키 발급 및 github에 gpg 공개키 설정.
