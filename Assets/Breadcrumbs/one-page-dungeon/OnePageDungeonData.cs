@@ -43,8 +43,15 @@ namespace Breadcrumbs.one_page_dungeon {
         [JsonProperty("w")] public long W { get; set; }
         [JsonProperty("h")] public long H { get; set; }
 
+        [JsonProperty("rotunda", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Rotunda;
+
         [JsonProperty("ending", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Ending { get; set; }
+
+        public override string ToString() {
+            return $"{X}, {Y}, {W}, {H}, {Rotunda?.ToString()}, {Ending?.ToString()}";
+        }
     }
 
     public partial class OnePageDungeonData {

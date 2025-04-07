@@ -1,45 +1,72 @@
-using System.Linq;
 using Breadcrumbs.one_page_dungeon;
+using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine;
 
 public class OnePageDungeon : MonoBehaviour {
     public TextAsset jsonData;
 
-    private OnePageDungeonData data;
+    private OnePageDungeonData _data;
+
+    [SerializeField] private DungeonTemplate dungeonTemplate;
+    [SerializeField] private Transform dungeonRoot;
+
+    private NavMeshSurface _navMeshSurface;
 
     private void Start() {
         if (jsonData == null)
             return;
         var json = jsonData.text;
-        data = OnePageDungeonData.FromJson(json);
+        _data = OnePageDungeonData.FromJson(json);
+        if (dungeonTemplate == null) {
+            Debug.Log("dungeonTemplate is null");
+            return;
+        }
+        dungeonTemplate.InstantiateRooms(_data, dungeonRoot);
+        dungeonTemplate.gameObject.SetActive(false);
+
+        if (dungeonRoot != null)
+            dungeonRoot.localScale = new Vector3(1, 1, -1); // hum..
+
+        /*
+        if (_navMeshSurface == null)
+            _navMeshSurface = GetComponent<NavMeshSurface>();
+        _navMeshSurface?.BuildNavMesh();
+        // */
     }
 
     private void OnDrawGizmos() {
-        if (data == null)
+        if (_data == null)
             return;
+        
+        const float kTileUnits = 4f;
 
-        foreach (var note in data.Notes) {
-            var origin = new Vector3(note.Pos.X, note.Pos.Y);
+        var mat = Gizmos.matrix;
+        Gizmos.matrix = Handles.matrix = transform.localToWorldMatrix * Matrix4x4.Scale(new Vector3(1, 1, -1));
+
+        foreach (var note in _data.Notes) {
+            var origin = new Vector3(note.Pos.X, 0, note.Pos.Y) * kTileUnits;
             Handles.Label(origin, $"({note.Ref}):{note.Text}");
         }
-        
-        foreach(var rect in data.Rects) {
-            var origin = new Vector3(rect.X, rect.Y);
+
+        foreach (var rect in _data.Rects) {
+            var origin = new Vector3(rect.X, 0, rect.Y) * kTileUnits;
+            var size = new Vector3(rect.W, 0, rect.H) * kTileUnits;
+            var center = size * 0.5f;
+
             Gizmos.color = Color.gray;
             Gizmos.DrawWireSphere(origin, 0.1f);
-            var size = new Vector3(rect.W, rect.H);
-            var center = size * 0.5f;
             Gizmos.DrawWireCube(origin + center, size);
             if (rect.Ending == true)
                 Gizmos.DrawWireCube(origin + center, size * 0.98f);
         }
 
         Handles.color = Color.magenta;
-        foreach (var door in data.Doors) {
-            var origin = new Vector3(door.X, door.Y);
-            var size = new Vector3(1, 1);
+        foreach (var door in _data.Doors) {
+            var origin = new Vector3(door.X, 0f, door.Y) * kTileUnits;
+            var size = new Vector3(1, 0f, 1) * kTileUnits;
             var center = size * 0.5f;
+
             Gizmos.color = new Color(1, 0, 0, 0.3f);
             Gizmos.DrawWireCube(origin + center, size);
             Gizmos.color = Color.red;
@@ -48,9 +75,9 @@ public class OnePageDungeon : MonoBehaviour {
         }
 
         Gizmos.color = Color.blue;
-        foreach (var water in data.Water) {
-            var center = new Vector3(water.X, water.Y);
-            var size = new Vector3(0.8f, 0.8f);
+        foreach (var water in _data.Water) {
+            var center = new Vector3(water.X, 0, water.Y) * kTileUnits;
+            var size = new Vector3(0.8f, 0f, 0.8f) * kTileUnits;
             Gizmos.DrawWireCube(center, size);
         }
     }
