@@ -2,6 +2,10 @@ using System;
 using Breadcrumbs.one_page_dungeon;
 using UnityEngine;
 
+// note: 아이디어 노트
+// 1) edge 기준으로 필요한 타일을 생성하도록 하는게 좋을까?
+// 2) left, right, top, bottom, 보다는 동서남북으로 하면 편할까? north, south, east, west?
+
 public class DungeonTemplate : MonoBehaviour {
     // for test
     public GameObject cube;
@@ -17,6 +21,16 @@ public class DungeonTemplate : MonoBehaviour {
     public GameObject wallRightTop;
     public GameObject wallRightBottom;
 
+    public GameObject cornerLeftTop;
+    public GameObject cornerLeftBottom;
+    public GameObject cornerRightTop;
+    public GameObject cornerRightBottom;
+
+    public GameObject doorLeft;
+    public GameObject doorRight;
+    public GameObject doorTop;
+    public GameObject doorBottom;
+
     private const float kTileUnits = 4f;
 
     private enum BlockType {
@@ -28,9 +42,17 @@ public class DungeonTemplate : MonoBehaviour {
         LeftTop,
         LeftBottom,
         RightTop,
-        RightBottom
+        RightBottom,
+        CornerLeftTop,
+        CornerLeftBottom,
+        CornerRightTop,
+        CornerRightBottom,
+        DoorLeft,
+        DoorRight,
+        DoorTop,
+        DoorBottom
     }
-
+    
     private GameObject InstantiateBlock(BlockType type = BlockType.Cube) {
         return type switch {
             BlockType.Cube => Instantiate(cube, _root),
@@ -63,15 +85,15 @@ public class DungeonTemplate : MonoBehaviour {
 
             GameObject go;
             if (rect.Rotunda == true) {
-                Debug.Log("rotunda");
-                const float step = 360f / 16f * Mathf.Deg2Rad;
+                const float segments = 16f; // todo: 방 사이즈에 따라서 필요한 세그먼트 수를 계산 할 수 있어야함. (통로와 연결될 Segment 방향도 신경써야함)
+                const float step = 360f / segments * Mathf.Deg2Rad;
                 var r = 0f;
                 var cx = origin.x + center.x;
                 var cy = origin.y + center.y;
                 for (var i = 0; i < 16; ++i, r += step) {
                     go = InstantiateBlock(BlockType.Bottom);
                     go.transform.localPosition = new Vector3(cx + Mathf.Sin(r) * center.x, 0, cy + Mathf.Cos(r) * center.y);
-                    go.transform.localRotation = Quaternion.Euler(0, 360f / 16f * i + 180f, 0);
+                    go.transform.localRotation = Quaternion.Euler(0, 360f / segments * i + 180f, 0);
                 }
 
                 continue; // :)
