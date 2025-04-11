@@ -1,5 +1,8 @@
 # Breadcrumbs
 > Just dropping some breadcrumbs from my Unity6 + GitHub adventures.
+- 2025/03/11: one page dungeon 맵 생성 테스트
+  - edge 생성 및 탐험 테스트
+  - TODO: 관련 캐릭터 컨트롤러 및 카메라
 - 2025/04/08: one page dungeon 데이터 이해 및 데이터 생성을 위한 테스트
   - Rects 형식 수정 (rotunda 플래그 추가)
   - KayKit Dungone Pack 에셋으로 룸 생성 테스트 -> Rects(룸?) 단위 생성 처리는 맞지 않는 것 같음.
