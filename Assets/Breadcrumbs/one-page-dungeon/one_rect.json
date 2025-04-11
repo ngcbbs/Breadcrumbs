@@ -1,0 +1,16 @@
+{
+  "version": "1.2.4b",
+  "title": "One Rect",
+  "story": "This is just one Rect.",
+  "rects": [
+    {
+      "x": 0,
+      "y": 0,
+      "w": 1,
+      "h": 1
+    }
+  ],
+  "doors": [],
+  "notes": [],
+  "water": []
+}

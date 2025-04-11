@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Breadcrumbs.one_page_dungeon;
 using UnityEngine;
 
@@ -139,5 +140,60 @@ public class DungeonTemplate : MonoBehaviour {
             go = InstantiateBlock(BlockType.RightTop);
             go.transform.localPosition = new Vector3(origin.x + size.x, 0, origin.y + size.y);
         }
+    }
+
+    private static bool IsInsideEllipse(Vector2 point, Vector2 ellipseCenter, Vector2 ellipseSize) {
+        if (ellipseSize.x <= 0 || ellipseSize.y <= 0) {
+            Debug.LogError("타원의 가로 또는 세로 크기는 0보다 커야 합니다.");
+            return false;
+        }
+
+        // 직사각형 내부에 꽉 찬 타원의 반지름 계산
+        float horizontalRadius = ellipseSize.x / 2f;
+        float verticalRadius = ellipseSize.y / 2f;
+
+        // 타원 방정식: ((x - centerX) / horizontalRadius)^2 + ((y - centerY) / verticalRadius)^2 <= 1
+        // 여기서 centerX, centerY는 타원의 중심이며, 직사각형의 중심과 동일합니다.
+        double normalizedX = (point.x - ellipseCenter.x) / horizontalRadius;
+        double normalizedY = (point.y - ellipseCenter.y) / verticalRadius;
+
+        return (normalizedX * normalizedX + normalizedY * normalizedY) <= 1;
+    }
+
+    public List<Vector2Int> GetEdgeTiles(OnePageDungeonData data) {
+        var result = new List<Vector2Int>();
+
+        if (data == null) {
+            Debug.Log("data is null");
+            return result;
+        }
+
+        foreach (var rect in data.Rects) {
+            var origin = new Vector2Int((int)rect.X, (int)rect.Y);
+
+            for (var y = 0; y < rect.H; ++y) {
+                for (var x = 0; x < rect.W; ++x) {
+                    if (rect.Rotunda == true) {
+                        // rotunda
+                        var cx = rect.X + rect.W * 0.5f;
+                        var cy = rect.Y + rect.H * 0.5f;
+                        if (!IsInsideEllipse(new Vector2(origin.x + x, origin.y + y), new Vector2(cx, cy),
+                                new Vector2(rect.W, rect.H)))
+                            continue;
+                    }
+
+                    AddPosition(origin, x, y, result);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private static void AddPosition(Vector2Int origin, int x, int y, List<Vector2Int> result) {
+        var position = origin + new Vector2Int(x, y);
+        if (result.Contains(position))
+            return;    
+        result.Add(position);
     }
 }

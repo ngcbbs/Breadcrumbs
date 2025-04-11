@@ -22,13 +22,22 @@ public class OnePageDungeon : MonoBehaviour {
             Debug.Log("dungeonTemplate is null");
             return;
         }
+        
+        // new
+        var edgeTiles = dungeonTemplate.GetEdgeTiles(_data);
+        EdgeBuilder.Build(edgeTiles, dungeonTemplate, dungeonRoot);
+        dungeonTemplate.gameObject.SetActive(false);
+        
+        /*
+        // old test
         dungeonTemplate.InstantiateRooms(_data, dungeonRoot);
         dungeonTemplate.gameObject.SetActive(false);
+        // */
 
         if (dungeonRoot != null)
             dungeonRoot.localScale = new Vector3(1, 1, -1); // hum..
 
-        /*
+        // /*
         if (_navMeshSurface == null)
             _navMeshSurface = GetComponent<NavMeshSurface>();
         _navMeshSurface?.BuildNavMesh();
