@@ -11,37 +11,50 @@ public class OnePageDungeon : MonoBehaviour {
     [SerializeField] private DungeonTemplate dungeonTemplate;
     [SerializeField] private Transform dungeonRoot;
 
-    private NavMeshSurface _navMeshSurface;
+    [ContextMenu("OnePageDungeon/CleanupDungeonRoot")]
+    private void CleanupDungeonRoot() {
+        var isPlaying = Application.isPlaying;
+        var count = dungeonRoot.childCount;
+        for (var i = count - 1; i >= 0; i--) {
+            var go = dungeonRoot.GetChild(i).gameObject;
+            if (isPlaying)
+                Destroy(go);
+            else
+                DestroyImmediate(go);
+        }
+    }
 
-    private void Start() {
-        if (jsonData == null)
-            return;
-        var json = jsonData.text;
-        _data = OnePageDungeonData.FromJson(json);
-        if (dungeonTemplate == null) {
-            Debug.Log("dungeonTemplate is null");
+    [ContextMenu("OnePageDungeon/BuildDungeon")]
+    private void Build() {
+        if (dungeonRoot == null) {
+            Debug.LogError("DungeonRoot is null");
             return;
         }
+        if (dungeonTemplate == null) {
+            Debug.LogError("DungeonTemplate is null");
+            return;
+        }
+        if (jsonData == null) {
+            Debug.LogError("jsonData is null");
+            return;
+        }
+        var json = jsonData.text;
+        var data = OnePageDungeonData.FromJson(json);
+        
+        // make dungeonRoot cleanup
+        CleanupDungeonRoot();
         
         // new
-        var edgeTiles = dungeonTemplate.GetEdgeTiles(_data);
+        var edgeTiles = dungeonTemplate.GetEdgeTiles(data);
         EdgeBuilder.Build(edgeTiles, dungeonTemplate, dungeonRoot);
         dungeonTemplate.gameObject.SetActive(false);
         
-        /*
-        // old test
-        dungeonTemplate.InstantiateRooms(_data, dungeonRoot);
-        dungeonTemplate.gameObject.SetActive(false);
-        // */
-
         if (dungeonRoot != null)
             dungeonRoot.localScale = new Vector3(1, 1, -1); // hum..
-
-        // /*
-        if (_navMeshSurface == null)
-            _navMeshSurface = GetComponent<NavMeshSurface>();
-        _navMeshSurface?.BuildNavMesh();
-        // */
+        
+        // build NavMesh
+        var navMeshSurface = GetComponent<NavMeshSurface>();
+        navMeshSurface?.BuildNavMesh();
     }
 
     private void OnDrawGizmos() {

@@ -16,6 +16,8 @@ namespace Breadcrumbs.one_page_dungeon {
         private static readonly int ColorId = Shader.PropertyToID("_Color");
 
         private static void SetMeshColor(GameObject go, Color color) {
+            if (!Application.isPlaying)
+                return;
             if (go == null)
                 return;
             var meshRenderer = go.GetComponent<MeshRenderer>();
