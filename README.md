@@ -1,5 +1,8 @@
 # Breadcrumbs
 > Just dropping some breadcrumbs from my Unity6 + GitHub adventures.
+- 2025/04/14: 히트박스 관련 컴포넌트 추가
+  - git local commit 무시 테스트 (rider)
+  - git commit 합치기(?) 테스트 실패
 - 2025/04/11: one page dungeon 맵 생성 테스트
   - edge 생성 및 탐험 테스트
   - TODO: 관련 캐릭터 컨트롤러 및 카메라
