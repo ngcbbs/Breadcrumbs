@@ -1,5 +1,7 @@
 # Breadcrumbs
 > Just dropping some breadcrumbs from my Unity6 + GitHub adventures.
+- 2025/04/15: 애니메이션 처리 관련 테스트
+  - nav mesh 생성 수정.
 - 2025/04/14: 히트박스 관련 컴포넌트 추가
   - git local commit 무시 테스트 (rider)
   - git commit 합치기(?) 테스트 실패
