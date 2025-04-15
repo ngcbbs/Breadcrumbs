@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e46de0a3f3a10343980ed5218a9f5e5, type: 3}
+  m_Name: Enemy
+  m_EditorClassIdentifier: 
+  enemyType: Melee
+  idleClip: {fileID: -6277497387356478362, guid: b71f0d8d2df3a9f44b417adfb3f4b7ff, type: 3}
+  walkClip: {fileID: 7060811993321468294, guid: b71f0d8d2df3a9f44b417adfb3f4b7ff, type: 3}
+  runClip: {fileID: 3543698089625107784, guid: b71f0d8d2df3a9f44b417adfb3f4b7ff, type: 3}
+  attackClip: {fileID: 5420517045014120221, guid: b71f0d8d2df3a9f44b417adfb3f4b7ff, type: 3}
+  deathClip: {fileID: -1923750366902163184, guid: b71f0d8d2df3a9f44b417adfb3f4b7ff, type: 3}
