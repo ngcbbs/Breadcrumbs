@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be833478916d41968b0854deb7bc7986, type: 3}
+  m_Name: AIIdleMovementSetting
+  m_EditorClassIdentifier: 
+  moveSpeed: 2
+  turnSpeed: 3
+  wanderRadius: 5
+  areaCenter: {x: 0, y: 0, z: 0}
+  useTransformAsCenter: 1
+  minDirectionChangeTime: 2
+  maxDirectionChangeTime: 5
+  raycastDistance: 1.5
+  separationDistance: 1.2
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  showDebugVisuals: 1

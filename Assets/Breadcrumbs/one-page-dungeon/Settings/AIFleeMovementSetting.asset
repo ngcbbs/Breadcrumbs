@@ -9,14 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a41b2828e01142cb8797c1a247ef90a8, type: 3}
-  m_Name: AICombatMovementSetting
+  m_Script: {fileID: 11500000, guid: 2ee27f6185d44d1fb6ae419c879b822a, type: 3}
+  m_Name: AIFleeMovementSetting
   m_EditorClassIdentifier: 
-  raycastDistance: 1
-  moveSpeed: 3
+  fleeSpeed: 4
   turnSpeed: 5
-  detectionRadius: 5
+  fleeRadius: 10
+  minFleeDistance: 5
+  raycastDistance: 2
   separationDistance: 1.5
-  strafingRadius: 3
-  strafingSpeed: 2
-  changeStrafingDirection: 1
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  panicMovement: 1
+  panicDirectionChangeTime: 1
+  showDebugVisuals: 1
