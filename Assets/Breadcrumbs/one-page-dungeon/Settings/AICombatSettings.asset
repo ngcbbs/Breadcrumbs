@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c1a4cb37860496284caa83fd48697e8, type: 3}
+  m_Name: AICombatSettings
+  m_EditorClassIdentifier: 
+  meleeAttackRange: 2
+  meleeAttackCooldown: 1.5
+  meleeAttackDuration: 0.5
+  meleeAttackDamage: 10
+  meleeAttackKnockback: 3
+  meleeAttackLayers:
+    serializedVersion: 2
+    m_Bits: 2048
+  rangedAttackRange: 10
+  rangedAttackCooldown: 2
+  rangedAttackChargeTime: 0.5
+  rangedAttackProjectileSpeed: 15
+  rangedAttackDamage: 8
+  projectilePrefab: {fileID: 0}
+  projectileSpawnPoint: {fileID: 0}
+  rangedAttackLayers:
+    serializedVersion: 2
+    m_Bits: 4096
+  targetUpdateInterval: 0.5
+  targetLostTime: 3
+  prioritizeClosestTarget: 1
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 256
