@@ -1,7 +1,9 @@
 # Breadcrumbs
 > Just dropping some breadcrumbs from my Unity6 + GitHub adventures.
-- 2024/04/16: ai 이동 관련 fsm 처리 테스트
-  - todo: 각 상태별 이동 처리에 중복 내용이 많음.
+- 2025/04/17: 확률기반 새 ai 이동 및 공격 시스템 테스트.
+  - todo: 이동 및 공격 시스템이 별도로 있는데.. 흠 공격 처리 부분이 별로임
+  - README 날짜 오류 수정 :P
+- 2025/04/16: ai 이동 관련 fsm 처리 테스트
 - 2025/04/15: 애니메이션 처리 관련 테스트
   - nav mesh 생성 수정.
 - 2025/04/14: 히트박스 관련 컴포넌트 추가
