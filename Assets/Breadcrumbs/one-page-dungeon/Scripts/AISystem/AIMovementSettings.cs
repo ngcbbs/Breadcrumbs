@@ -16,6 +16,11 @@ namespace Breadcrumbs.AISystem {
         public float strafingSpeed = 0.5f;
         public bool changeStrafingDirection = true;
         public float detectionRadius = 10f;
+        
+        [Header("전투 이동 공격 설정")]
+        public float attackRangeRatio = 0.75f;
+        public float attackDamage = 10f;
+        public float attackDuration = 0.5f;
 
         [Header("대시 설정")]
         public float dashSpeed = 10f;

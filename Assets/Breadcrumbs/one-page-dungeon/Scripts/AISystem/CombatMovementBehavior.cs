@@ -2,11 +2,17 @@ using UnityEngine;
 
 namespace Breadcrumbs.AISystem {
     public class CombatMovementBehavior : AIMovementBehaviorBase {
-        private readonly Vector3[] _directions;
-        private readonly float[] _weights;
-        private readonly Collider[] _results;
+        private Vector3[] _directions;
+        private float[] _weights;
+        private Collider[] _results;
         private bool _isStrafing = false;
         private float _strafingDirection = 1f;
+
+        // 공격 관련 변수 추가
+        private float _attackCooldown = 0f;
+        private readonly float _attackRange;
+        private bool _isAttacking = false;
+        private float _attackTimer = 0f;
 
         public CombatMovementBehavior(AIMovementSettings settings) : base(settings) {
             _directions = new Vector3[] {
@@ -21,6 +27,9 @@ namespace Breadcrumbs.AISystem {
             };
             _weights = new float[_directions.Length];
             _results = new Collider[16];
+
+            // 공격 설정 초기화
+            _attackRange = settings.strafingRadius * settings.attackRangeRatio; // 0.75f; // 이동 설정에서 범위 가져오기
         }
 
         public override float EvaluateSuitability(AIContextData context) {
@@ -43,6 +52,9 @@ namespace Breadcrumbs.AISystem {
         }
 
         public override Vector3 CalculateDirection(AIContextData context) {
+            // 공격 처리
+            UpdateAttackState(context);
+
             Transform self = context.self;
             Transform target = context.target;
 
@@ -54,6 +66,26 @@ namespace Breadcrumbs.AISystem {
                 _isStrafing = true;
             } else {
                 _isStrafing = false;
+            }
+
+            // 변경된 부분: 공격 애니메이션 중 수행 단계에서만 정지하고
+            // 나머지 시간은 약간의 움직임을 허용
+            if (_isAttacking) {
+                // 공격 타이밍 직전/직후에만 정지
+                float attackMidPoint = settings.attackDuration / 2;
+                if (_attackTimer > attackMidPoint - 0.1f && _attackTimer < attackMidPoint + 0.1f) {
+                    return Vector3.zero;
+                }
+                // 나머지 시간은 느리게 움직임
+                else if (_isStrafing) {
+                    return GetStrafingDirection(context) * 0.3f; // 감소된 속도로 계속 움직임
+                }
+            }
+
+            // 공격 범위 내 && 쿨다운 완료 => 공격 시작
+            if (distanceToTarget <= _attackRange && _attackCooldown <= 0) {
+                StartAttack(context);
+                return Vector3.zero;
             }
 
             if (_isStrafing) {
@@ -75,7 +107,87 @@ namespace Breadcrumbs.AISystem {
             }
         }
 
+        // 공격 상태 업데이트
+        private void UpdateAttackState(AIContextData context) {
+            // 쿨다운 감소
+            if (_attackCooldown > 0) {
+                _attackCooldown -= Time.deltaTime;
+            }
+
+            // 공격 진행 중일 때
+            if (_isAttacking) {
+                _attackTimer -= Time.deltaTime;
+
+                // 공격 타이밍 (공격 지속시간의 중간 지점)
+                if (_attackTimer <= settings.attackDuration / 2 && _attackTimer > settings.attackDuration / 2 - Time.deltaTime) {
+                    PerformAttack(context);
+                    Debug.Log("basic 공격 처리!");
+                }
+                
+                // 공격 종료
+                if (_attackTimer <= 0) {
+                    _isAttacking = false;
+                    _attackCooldown = 2f; // 공격 후 쿨다운
+            
+                    // 추가: 공격 종료 후 바로 새로운 방향 결정을 위한 플래그 설정
+                    // 필요에 따라 컨트롤러에 알림을 보내는 이벤트 추가 가능
+                    Debug.Log($"{context.self.name} finished attack and resumed movement!");
+                }
+            }
+        }
+
+        // 공격 시작
+        private void StartAttack(AIContextData context) {
+            if (context.target == null || _isAttacking) return;
+
+            _isAttacking = true;
+            _attackTimer = settings.attackDuration;
+
+            // 공격 방향으로 회전
+            Vector3 dirToTarget = (context.target.position - context.self.position).normalized;
+            dirToTarget.y = 0; // Y축 회전만 고려
+
+            if (dirToTarget != Vector3.zero) {
+                context.self.rotation = Quaternion.LookRotation(dirToTarget);
+            }
+
+            Debug.Log($"{context.self.name} starts basic attack!");
+        }
+
+        // 실제 공격 판정 적용
+        private void PerformAttack(AIContextData context) {
+            // 공격 범위 내 대상 검출
+            Collider[] hitColliders = new Collider[5];
+            Vector3 attackCenter = context.self.position + context.self.forward * (_attackRange * 0.5f);
+            int hitCount = Physics.OverlapSphereNonAlloc(
+                attackCenter,
+                _attackRange * 0.5f,
+                hitColliders,
+                LayerMask.GetMask("Player") // , "Enemy", "NPC") // 적절한 레이어로 변경 필요
+            );
+
+            for (int i = 0; i < hitCount; i++) {
+                if (hitColliders[i].transform != context.self) {
+                    // 대상에게 데미지 적용
+                    IDamageable damageable = hitColliders[i].GetComponent<IDamageable>();
+                    if (damageable != null) {
+                        damageable.TakeDamage(settings.attackDamage);
+                        Debug.Log($"{context.self.name} hit {hitColliders[i].name} for {settings.attackDamage} damage!");
+                    }
+
+                    // 넉백 적용 (선택사항)
+                    Rigidbody rb = hitColliders[i].GetComponent<Rigidbody>();
+                    if (rb != null) {
+                        Vector3 knockbackDir = (hitColliders[i].transform.position - context.self.position).normalized;
+                        rb.AddForce(knockbackDir * 3f, ForceMode.Impulse);
+                    }
+                }
+            }
+        }
+
+        // 기존 메서드들은 그대로 유지
         private float EvaluateDirection(Vector3 dir, AIContextData context) {
+            // 기존 코드 유지
             Transform self = context.self;
             Transform target = context.target;
 
@@ -112,6 +224,7 @@ namespace Breadcrumbs.AISystem {
         }
 
         private Vector3 GetSeparationVector(AIContextData context) {
+            // 기존 코드 유지
             Transform self = context.self;
             Vector3 separation = Vector3.zero;
 
@@ -125,6 +238,7 @@ namespace Breadcrumbs.AISystem {
         }
 
         private Vector3 GetStrafingDirection(AIContextData context) {
+            // 기존 코드 유지
             Transform self = context.self;
             Transform target = context.target;
 
@@ -138,6 +252,7 @@ namespace Breadcrumbs.AISystem {
             return strafeDir;
         }
 
+        // 기즈모에 공격 범위 추가
         public override void DrawGizmos(AIContextData context) {
             if (_directions == null || _weights == null) return;
 
@@ -149,6 +264,21 @@ namespace Breadcrumbs.AISystem {
                 float length = Mathf.Clamp(Mathf.Abs(weight), 0, 1) * 2f;
                 Gizmos.DrawLine(pos, pos + _directions[i] * length);
             }
+
+            // 공격 범위 시각화
+            if (_isAttacking) {
+                Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
+                Vector3 attackCenter = context.self.position + context.self.forward * (_attackRange * 0.5f);
+                Gizmos.DrawSphere(attackCenter, _attackRange * 0.5f);
+            } else {
+                Gizmos.color = new Color(1f, 0.5f, 0f, 0.1f);
+                Gizmos.DrawWireSphere(context.self.position, _attackRange);
+            }
+        }
+
+        // IsActionInProgress 메서드 추가 - 전투 컨트롤러에서 사용
+        public bool IsAttacking() {
+            return _isAttacking;
         }
     }
 }

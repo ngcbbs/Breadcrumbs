@@ -68,10 +68,23 @@ namespace Breadcrumbs.AISystem {
             }
         }
         
-        // 기존 Update 메서드 수정
         private bool ShouldSkipMovement() {
             // 전투 행동 중이면 이동 건너뛰기
-            return _combatController != null && _combatController.IsPerformingCombatAction();
+            if (_combatController != null && _combatController.IsPerformingCombatAction()) {
+                return true;
+            }
+    
+            // CombatMovementBehavior에서 공격 중일 때도 이동 중지
+            if (_currentBehavior is CombatMovementBehavior combatBehavior) {
+                var isAttacking = combatBehavior.IsAttacking();
+                if (isAttacking) {
+                    // 임시: 기본 공격 문제를 회피. (-_-;;)
+                    combatBehavior.CalculateDirection(_contextData);
+                }
+                return isAttacking;
+            }
+    
+            return false;
         }
 
         private void Update() {

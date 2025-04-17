@@ -2,7 +2,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Breadcrumbs.one_page_dungeon.Scripts {
-    public class PlayerSkillExample : MonoBehaviour {
+    public class PlayerSkillExample : MonoBehaviour,  Breadcrumbs.AISystem.IDamageable {
         [Header("Player Skill Simulation")] public KeyCode skillKey = KeyCode.Space;
         public float skillRadius = 5f;
         public LayerMask enemyLayer;
@@ -50,6 +50,10 @@ namespace Breadcrumbs.one_page_dungeon.Scripts {
                 Gizmos.color = new Color(0, 1, 1, 0.2f);
                 Gizmos.DrawWireSphere(_player.position, skillRadius);
             }
+        }
+
+        public void TakeDamage(float amount) {
+            Debug.Log($"{name} take damage! ({amount})");
         }
     }
 }
