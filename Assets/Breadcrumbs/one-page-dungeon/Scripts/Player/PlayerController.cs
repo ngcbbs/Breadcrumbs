@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -17,9 +19,19 @@ namespace Breadcrumbs.Player {
         public PlayerStateBase CurrentState => _currentState;
         private readonly Dictionary<Type, PlayerBehaviorBase> _behaviors = new Dictionary<Type, PlayerBehaviorBase>();
         private readonly InputBuffer _inputBuffer = new InputBuffer();
+        private InputData _lastInput; // 최근 입력 저장 (버퍼링 로직에 활용 가능)
 
         // 상태 관리 사전
         private readonly Dictionary<Type, PlayerStateBase> _states = new Dictionary<Type, PlayerStateBase>();
+        
+        // 상태별 활성화할 Behavior 타입 목록
+        private readonly Dictionary<Type, List<Type>> _stateBehaviors = new Dictionary<Type, List<Type>>()
+        {
+            { typeof(IdleState), new List<Type> { typeof(MovementBehavior), typeof(MeleeAttackBehavior) } },
+            { typeof(MoveState), new List<Type> { typeof(MovementBehavior) } },
+            { typeof(DashState), new List<Type> { typeof(DashBehavior) } }
+            // 다른 상태에 대한 Behavior 목록 추가
+        };
 
         void Awake() {
             _context = new ContextData();
@@ -41,9 +53,12 @@ namespace Breadcrumbs.Player {
             foreach (var state in _states.Values) {
                 state.SetController(this);
             }
-
-            // 모든 Behavior에 PlayerController 할당 (생성 시 전달했으므로 불필요)
-            InputManager.Instance.Initialized();
+            
+            // 입력 버퍼 처리를 위한 설정. 
+            InputManager.Instance.Initialized(this);
+            
+            // InputManager 이벤트 구독
+            InputManager.OnInput += HandleInputEvent;
         }
 
         void OnDestroy() {
@@ -76,9 +91,8 @@ namespace Breadcrumbs.Player {
             }
 
             // 활성화된 Behavior들의 Execute 호출
-            foreach (var behavior in _behaviors.Values
-                         .Where(b => (_currentState != null && IsBehaviorEnabledForState(b.GetType(), _currentState.GetType())))
-                         .OrderByDescending(b => b.Priority)) {
+            foreach (var behavior in _behaviors.Values.Where(b => IsBehaviorEnabledForCurrentState(b.GetType())).OrderByDescending(b => b.Priority))
+            {
                 behavior.Execute();
             }
 
@@ -88,30 +102,14 @@ namespace Breadcrumbs.Player {
             }
         }
 
-        // 특정 상태에서 Behavior가 활성화되어 있는지 확인하는 로직 (예시)
-        private bool IsBehaviorEnabledForState(Type behaviorType, Type stateType) {
-            // 각 상태별로 활성화되는 Behavior를 정의하는 방식이 필요합니다.
-            // 여기서는 간단한 예시로 MovementBehavior는 항상 활성화되어 있다고 가정합니다.
-            if (behaviorType == typeof(MovementBehavior)) return true;
-            if (stateType == typeof(IdleState) && (behaviorType == typeof(MeleeAttackBehavior))) return true;
-            if (stateType == typeof(DashState) && (behaviorType == typeof(DashBehavior))) return true;
+        // 현재 상태에서 Behavior가 활성화되어 있는지 확인
+        private bool IsBehaviorEnabledForCurrentState(Type behaviorType)
+        {
+            if (_currentState != null && _stateBehaviors.TryGetValue(_currentState.GetType(), out var enabledBehaviors))
+            {
+                return enabledBehaviors.Contains(behaviorType);
+            }
             return false;
-        }
-
-        // Behavior 활성화 (더 이상 MonoBehaviour의 enabled 사용 안함)
-        public void EnableBehavior(Type behaviorType) {
-            if (_behaviors.TryGetValue(behaviorType, out var behavior)) {
-                // Behavior 활성화 상태를 별도로 관리할 수 있습니다.
-                // 현재는 상태 기반으로 활성화를 제어하므로 별도 플래그는 생략합니다.
-            }
-        }
-
-        // Behavior 비활성화
-        public void DisableBehavior(Type behaviorType) {
-            if (_behaviors.TryGetValue(behaviorType, out var behavior)) {
-                // Behavior 비활성화 상태를 별도로 관리할 수 있습니다.
-                // 현재는 상태 기반으로 활성화를 제어하므로 별도 플래그는 생략합니다.
-            }
         }
 
         public void ChangeState<T>() where T : PlayerStateBase {
@@ -120,21 +118,46 @@ namespace Breadcrumbs.Player {
 
         // 상태 변경 (타입 기반)
         public void ChangeState(Type newState) {
-            if (_currentState != null && _currentState.GetType() == newState) return;
+            if (_currentState != null && _currentState.GetType() == newState) 
+                return;
 
             if (_states.TryGetValue(newState, out var nextState)) {
+                var from = (_currentState != null) ? _currentState?.GetType().Name : "null";
+                Debug.Log($"상태 변경 요청 {from} -> {nextState.GetType()}");
                 _currentState?.OnExitState();
                 _currentState = nextState;
                 _currentState.SetController(this);
                 _currentState.OnEnterState();
+                UpdateActiveBehaviors();
             } else {
                 Debug.LogError($"[PlayerController] 상태 {newState.Name}를 찾을 수 없습니다.");
             }
         }
+        
+        // 현재 상태에 따라 활성화/비활성화할 Behavior 업데이트
+        private void UpdateActiveBehaviors()
+        {
+            // 모든 Behavior의 활성화 상태를 현재 상태에 맞춰 업데이트
+            foreach (var behavior in _behaviors.Values)
+            {
+                bool shouldBeEnabled = IsBehaviorEnabledForCurrentState(behavior.GetType());
+                // Behavior에 활성화/비활성화 상태를 관리하는 별도의 플래그가 있다면 여기서 업데이트
+                // 현재는 Execute 함수에서 IsBehaviorEnabledForCurrentState 결과를 사용하므로 명시적인 활성화/비활성화는 생략
+            }
+        }
+        
+        // InputManager 이벤트 핸들러 - 입력 발생 즉시 상태에 전달
+        private void HandleInputEvent(object sender, InputData input)
+        {
+            _lastInput = input; // 최근 입력 업데이트
+            _currentState?.HandleInput(input);
+            // 필요하다면 여기서 특정 조건에 따라 inputBuffer.EnqueueInput(input);
+        }
 
         // 입력 버퍼에 입력 추가
-        public void BufferInput(InputData input) {
+        public bool BufferInput(InputData input) {
             _inputBuffer.EnqueueInput(input);
+            return true;
         }
 
         // 현재 상태 가져오기 (타입 기반)
@@ -160,9 +183,17 @@ namespace Breadcrumbs.Player {
             transform.Rotate(Vector3.up, angle);
         }
 
+        [ReadOnly]
+        public string CurrentStateName;
+
         private void OnDrawGizmos() {
             Gizmos.color = Color.magenta;
             Gizmos.DrawLine(transform.position, transform.position + transform.forward * 3f);
+
+            if (CurrentState != null) {
+                CurrentStateName = CurrentState.GetType().ToShortString();
+                //Handles.Label(transform.position, $"{CurrentState.GetType().ToShortString()}");
+            }
         }
     }
 }

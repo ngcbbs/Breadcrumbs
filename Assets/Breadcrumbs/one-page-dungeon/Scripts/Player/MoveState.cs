@@ -4,12 +4,10 @@ namespace Breadcrumbs.Player {
     public class MoveState : PlayerStateBase {
         public override void OnEnterState() {
             Debug.Log("Move State Entered");
-            CurrentController.EnableBehavior(typeof(MovementBehavior));
         }
 
         public override void OnExitState() {
             Debug.Log("Move State Exited");
-            CurrentController.DisableBehavior(typeof(MovementBehavior));
         }
 
         public override void UpdateState() {
@@ -18,6 +16,7 @@ namespace Breadcrumbs.Player {
 
         public override void HandleInput(InputData input) {
             if (!input.IsMoving) {
+                Debug.Log("move -> idle 상태 변경");
                 CurrentController.ChangeState<IdleState>();
             }
 
@@ -27,6 +26,7 @@ namespace Breadcrumbs.Player {
             }
 
             if (input.dashPressed) {
+                Debug.Log("대쉬 상태 변경 처리 yo");
                 CurrentController.ChangeState<DashState>();
             }
         }

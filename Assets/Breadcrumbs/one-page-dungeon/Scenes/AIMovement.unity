@@ -3130,7 +3130,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1048069084}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cecba9fce87f450391a13d402d0ce0af, type: 3}
   m_Name: 
@@ -3153,6 +3153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: 1fe43cab2cc270848b92dfacd82f196d, type: 2}
+  CurrentStateName: 
 --- !u!1 &1063036817
 GameObject:
   m_ObjectHideFlags: 0

@@ -37,6 +37,9 @@ namespace Breadcrumbs.Player {
 
         // 리바인딩 관련 변수
         private InputActionRebindingExtensions.RebindingOperation rebindOperation;
+        
+        // 플레이어 컨트롤러
+        private PlayerController _playerController;
 
         public static InputManager Instance {
             get {
@@ -90,8 +93,9 @@ namespace Breadcrumbs.Player {
             dashAction.performed -= OnDash;
         }
 
-        public void Initialized() {
+        public void Initialized(PlayerController controller) {
             Debug.Log("InputManager initialized.");
+            _playerController = controller;
         }
 
         private void OnAttack(InputAction.CallbackContext context) {

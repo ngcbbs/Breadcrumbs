@@ -41,19 +41,21 @@ namespace Breadcrumbs.Player {
                 }
 
                 Debug.Log($"[DashBehavior] 대쉬 시작! 방향: {_dashDirection}");
-                // 대쉬 시작 이벤트 발행
+                controller.ChangeState<DashState>();
             } else if (input.dashPressed && !_isDashing && input.strafeInput != 0f) {
                 _isDashing = true;
                 _dashTimer = 0f;
                 _currentDashForce = Settings.dashForce;
                 _dashDirection = controller.transform.right * input.strafeInput;
                 Debug.Log($"[DashBehavior] 평행 이동 대쉬 시작! 방향: {_dashDirection}");
+                controller.ChangeState<DashState>();
             } else if (input.dashPressed && !_isDashing) {
                 _isDashing = true;
                 _dashTimer = 0f;
                 _currentDashForce = Settings.dashForce;
                 _dashDirection = controller.transform.forward; // 이동 입력 없을 시 현재 바라보는 방향으로 대쉬 (기본값)
                 Debug.Log($"[DashBehavior] 제자리 대쉬 시작! 방향: {_dashDirection}");
+                controller.ChangeState<DashState>();
             }
         }
 

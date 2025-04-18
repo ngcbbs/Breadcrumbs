@@ -9,14 +9,12 @@ namespace Breadcrumbs.Player {
         public override void OnEnterState()
         {
             Debug.Log("Dash State Entered");
-            CurrentController.EnableBehavior(typeof(DashBehavior));
             _dashTimer = 0f;
         }
 
         public override void OnExitState()
         {
             Debug.Log("Dash State Exited");
-            CurrentController.DisableBehavior(typeof(DashBehavior));
         }
 
         public override void UpdateState()

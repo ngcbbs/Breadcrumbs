@@ -41,7 +41,7 @@ namespace Breadcrumbs.Player {
 
             // 좌우 평행 이동 (Strafe)
             if (strafeInput != 0f) {
-                Vector3 strafeDirection = controller.transform.right * strafeInput * Settings.strafeSpeed * Time.deltaTime;
+                Vector3 strafeDirection = controller.transform.right * (strafeInput * Settings.strafeSpeed * Time.deltaTime);
                 controller.MovePlayer(strafeDirection);
             }
         }

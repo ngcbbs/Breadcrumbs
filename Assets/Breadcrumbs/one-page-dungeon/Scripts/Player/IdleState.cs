@@ -4,14 +4,10 @@ namespace Breadcrumbs.Player {
     public class IdleState : PlayerStateBase {
         public override void OnEnterState() {
             Debug.Log("Idle State Entered");
-            CurrentController.EnableBehavior(typeof(MovementBehavior));
-            CurrentController.EnableBehavior(typeof(MeleeAttackBehavior));
         }
 
         public override void OnExitState() {
             Debug.Log("Idle State Exited");
-            CurrentController.DisableBehavior(typeof(MovementBehavior));
-            CurrentController.DisableBehavior(typeof(MeleeAttackBehavior));
         }
 
         public override void UpdateState() {
@@ -20,6 +16,7 @@ namespace Breadcrumbs.Player {
 
         public override void HandleInput(InputData input) {
             if (input.IsMoving) {
+                Debug.Log("idle -> move 상태 변경");
                 CurrentController.ChangeState<MoveState>();
             }
 
