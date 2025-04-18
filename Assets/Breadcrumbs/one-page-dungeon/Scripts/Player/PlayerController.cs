@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Breadcrumbs.Player {
     public class PlayerController : MonoBehaviour {
@@ -9,10 +10,10 @@ namespace Breadcrumbs.Player {
         private PlayerSettings settings;
         private ContextData _context;
         private PlayerStateBase _currentState;
-        
+
         public ContextData Context => _context;
         public PlayerSettings Settings => settings;
-        
+
         public PlayerStateBase CurrentState => _currentState;
         private readonly Dictionary<Type, PlayerBehaviorBase> _behaviors = new Dictionary<Type, PlayerBehaviorBase>();
         private readonly InputBuffer _inputBuffer = new InputBuffer();
@@ -149,15 +150,19 @@ namespace Breadcrumbs.Player {
         public void MovePlayer(Vector2 velocity) {
             transform.Translate(new Vector3(velocity.x, 0, velocity.y));
         }
-        
+
         public void MovePlayer(Vector3 velocity) {
-            transform.Translate(velocity);
+            transform.Translate(velocity, Space.World);
         }
-        
+
         // Player 회전 처리
-        public void RotatePlayer(float angle)
-        {
+        public void RotatePlayer(float angle) {
             transform.Rotate(Vector3.up, angle);
+        }
+
+        private void OnDrawGizmos() {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawLine(transform.position, transform.position + transform.forward * 3f);
         }
     }
 }
