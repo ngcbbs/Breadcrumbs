@@ -1,5 +1,9 @@
 # Breadcrumbs
 > Just dropping some breadcrumbs from my Unity6 + GitHub adventures.
+ 
+- 2025/04/18: 플레이어 컨트롤 시스템 추가.
+  - 입력 설정 변경 관련 ui 테스트. (유니티 새 입력 시스템)
+    - 입력 형식 중 컴포지트 형식은 입력 받기가 안되나봄?
 - 2025/04/17: 확률기반 새 ai 이동 및 공격 시스템 테스트.
   - todo: 이동 및 공격 시스템이 별도로 있는데.. 흠 공격 처리 부분이 별로임
   - README 날짜 오류 수정 :P
