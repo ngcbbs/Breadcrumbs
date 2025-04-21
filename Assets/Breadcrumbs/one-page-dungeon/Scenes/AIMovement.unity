@@ -2105,6 +2105,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 493195021}
   m_CullTransparentMesh: 1
+--- !u!1 &540595931
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 540595932}
+  - component: {fileID: 540595933}
+  m_Layer: 0
+  m_Name: cm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &540595932
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540595931}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.2588186, y: 0, z: -0, w: 0.965926}
+  m_LocalPosition: {x: 0, y: -0.078988075, z: 9.283203}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2144707623}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &540595933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540595931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &587735020
 GameObject:
   m_ObjectHideFlags: 0
@@ -7024,7 +7068,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 4.71, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 540595932}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
 --- !u!114 &2144707624
@@ -7080,31 +7125,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 2144707620}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbffb659eb360cd41a2f3d837ebf122a, type: 3}
+  m_Script: {fileID: 11500000, guid: f8ff6694f3c73a04c8747ddd92032556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1048069088}
-  findPlayerOnStart: 1
-  playerTag: Player
-  distance: 5
-  height: 2
-  smoothSpeed: 10
-  targetOffset: {x: 0, y: 0, z: 0}
-  followTargetRotation: 1
-  allowManualRotation: 0
-  rotationSpeed: 5
-  minVerticalAngle: -30
-  maxVerticalAngle: 60
-  detectCollisions: 1
-  collisionRadius: 0.2
+  playerTransform: {fileID: 1048069088}
+  targetOffset: {x: 0, y: 1.5, z: 0}
+  cameraDistance: 4
+  cameraHeight: 2
+  followDamping: 0.2
+  rotationSpeed: 3
+  invertYAxis: 0
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 128
-  collisionSmoothing: 5
-  useOcclusion: 1
-  occlusionSmoothing: 10
-  minDistance: 0.5
-  showDebug: 1
+    m_Bits: 4294967003
+  collisionRadius: 0.4
+  minDistanceFromPlayer: 1.5
+  showDebugRays: 1
+  dungeonBounds:
+    m_Center: {x: 0, y: 1, z: 0}
+    m_Extent: {x: 162.5, y: 3.5, z: 162.5}
+  useDungeonBounds: 1
+  showBoundsGizmo: 1
 --- !u!1001 &5964569486823737028
 PrefabInstance:
   m_ObjectHideFlags: 0
