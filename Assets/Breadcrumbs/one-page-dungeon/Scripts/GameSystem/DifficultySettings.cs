@@ -4,7 +4,7 @@ namespace Breadcrumbs.SpawnSystem {
     /// <summary>
     /// 난이도별 게임 설정을 정의하는 ScriptableObject
     /// </summary>
-    [CreateAssetMenu(fileName = "DifficultySettings", menuName = "DungeonGame/DifficultySettings")]
+    [CreateAssetMenu(fileName = "DifficultySettings", menuName = "Breadcrumbs/DifficultySettings")]
     public class DifficultySettings : ScriptableObject {
         [Header("기본 설정")]
         public DifficultyLevel difficultyLevel;

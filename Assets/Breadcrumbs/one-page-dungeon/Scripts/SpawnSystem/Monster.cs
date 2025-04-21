@@ -1,3 +1,4 @@
+using Breadcrumbs.ItemSystem;
 using UnityEngine;
 
 namespace Breadcrumbs.SpawnSystem {
@@ -44,42 +45,17 @@ namespace Breadcrumbs.SpawnSystem {
         }
 
         private void DropItems() {
-            if (monsterData == null || monsterData.possibleDrops == null || monsterData.possibleDrops.Count == 0)
+            if (monsterData == null || monsterData.possibleDrops == null)
                 return;
 
             DifficultySettings difficulty = SpawnManager.Instance?.currentDifficultySettings;
             if (difficulty == null) return;
 
-            foreach (var dropData in monsterData.possibleDrops) {
-                if (dropData.item == null) continue;
-
-                float dropChance = dropData.dropChance;
-
-                // 아이템 희귀도에 따른 드롭률 조정
-                switch (dropData.item.rarity) {
-                    case ItemRarity.Common:
-                        dropChance *= difficulty.commonItemDropRate;
-                        break;
-                    case ItemRarity.Uncommon:
-                        dropChance *= difficulty.uncommonItemDropRate;
-                        break;
-                    case ItemRarity.Rare:
-                        dropChance *= difficulty.rareItemDropRate;
-                        break;
-                    case ItemRarity.Epic:
-                        dropChance *= difficulty.epicItemDropRate;
-                        break;
-                    case ItemRarity.Legendary:
-                        dropChance *= difficulty.legendaryItemDropRate;
-                        break;
-                }
-
-                // 드롭 여부 결정
-                if (UnityEngine.Random.value <= dropChance) {
-                    // 아이템 생성
-                    GameObject item = Instantiate(dropData.item.itemPrefab, transform.position, Quaternion.identity);
-                    Debug.Log($"{dropData.item.itemName}이(가) 드롭되었습니다.");
-                }
+            var dropItems = monsterData.possibleDrops.RollDrops(DungeonDifficulty.Normal);
+            foreach (var item in dropItems) {
+                // note: 필드 드랍인가?
+                var fieldItem = Instantiate(item.item.prefab, transform.position, Quaternion.identity);
+                Debug.Log($"{item.item.itemName}이(가) 드롭되었습니다.");
             }
         }
     }

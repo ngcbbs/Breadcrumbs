@@ -574,13 +574,13 @@ namespace Breadcrumbs.InventorySystem {
         }
 
         // 동기화 데이터 구조
-        [System.Serializable]
+        [Serializable]
         public enum SlotType {
             Inventory,
             Equipment
         }
 
-        [System.Serializable]
+        [Serializable]
         public class InventorySyncData {
             public SlotType slotType;
             public int slotIndex;

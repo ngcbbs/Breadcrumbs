@@ -36,10 +36,8 @@ namespace Breadcrumbs.ItemSystem {
 
         // 아이템이 장비인지 확인
         public bool IsEquipment() {
-            return itemType == ItemType.Weapon || itemType == ItemType.Helmet ||
-                   itemType == ItemType.Armor || itemType == ItemType.Pants ||
-                   itemType == ItemType.Boots || itemType == ItemType.Gloves ||
-                   itemType == ItemType.Necklace || itemType == ItemType.Ring;
+            return itemType is ItemType.Weapon or ItemType.Helmet or ItemType.Armor or ItemType.Pants or ItemType.Boots
+                or ItemType.Gloves or ItemType.Necklace or ItemType.Ring;
         }
 
         // 아이템이 소모품인지 확인
