@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b677523050424b13b1e300c11be500a1, type: 3}
+  m_Name: Enemy_Data
+  m_EditorClassIdentifier: 
+  monsterName: Enemy
+  monsterPrefab: {fileID: 1068789040133891354, guid: 0dab28c42ea623f4dac5d3141ee4b629, type: 3}
+  baseHealth: 100
+  baseDamage: 1
+  baseSpeed: 3
+  minimumDifficulty: 0
+  possibleDrops: []

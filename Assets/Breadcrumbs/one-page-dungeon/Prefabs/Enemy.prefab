@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2919285588421024187}
   - component: {fileID: 3313831416719147690}
   - component: {fileID: 303381494174556064}
+  - component: {fileID: 3649300234325968083}
   m_Layer: 9
   m_Name: Enemy
   m_TagString: Enemy
@@ -171,3 +172,16 @@ MonoBehaviour:
   combatMovement: {fileID: 1055398473440916323}
   fleeMovement: {fileID: 3313831416719147690}
   _currentState: 0
+--- !u!114 &3649300234325968083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068789040133891354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0177d128db0432aa4baa1e986af7ac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterData: {fileID: 11400000, guid: 83f84a8a2cc09b14b9a1416aaf0745a7, type: 2}
