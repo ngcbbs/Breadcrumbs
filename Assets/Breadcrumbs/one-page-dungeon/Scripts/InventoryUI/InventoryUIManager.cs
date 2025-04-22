@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Breadcrumbs.CharacterSystem;
+using Breadcrumbs.Core;
 using Breadcrumbs.InventorySystem;
 using TMPro;
 using UnityEngine;
@@ -69,9 +71,12 @@ namespace Breadcrumbs.ItemSystem {
             dropItemDialog.Initialize(this, playerInventory);
             splitItemDialog.Initialize(this, playerInventory);
 
+            // todo: fixme 이벤트 핸들링 수정 필요.
+            /*
             // 플레이어 인벤토리 이벤트 등록
             playerInventory.OnSlotChanged += OnInventorySlotChanged;
             playerInventory.OnEquipChanged += OnEquipmentSlotChanged;
+            // */
 
             // 초기 상태 설정
             UpdateAllSlots();
@@ -95,7 +100,7 @@ namespace Breadcrumbs.ItemSystem {
                 GameObject slotObj = Instantiate(inventorySlotPrefab, inventorySlotsContainer);
                 InventorySlotUI slot = slotObj.GetComponent<InventorySlotUI>();
 
-                slot.Initialize(i, PlayerInventory.SlotType.Inventory, playerInventory, this);
+                slot.Initialize(i, SlotType.Inventory, playerInventory, this);
                 inventorySlots.Add(slot);
 
                 // 이벤트 트리거 컴포넌트 추가 (툴팁 표시용)
@@ -132,7 +137,7 @@ namespace Breadcrumbs.ItemSystem {
                         GameObject slotObj = Instantiate(equipmentSlotPrefab, equipmentSlotsContainer);
                         InventorySlotUI slot = slotObj.GetComponent<InventorySlotUI>();
 
-                        slot.Initialize((int)equipSlot, PlayerInventory.SlotType.Equipment, playerInventory, this);
+                        slot.Initialize((int)equipSlot, SlotType.Equipment, playerInventory, this);
                         equipmentSlots[equipSlot] = slot;
 
                         // 이벤트 트리거 컴포넌트 추가 (툴팁 표시용)
@@ -156,7 +161,7 @@ namespace Breadcrumbs.ItemSystem {
                         GameObject slotObj = Instantiate(equipmentSlotPrefab, equipmentSlotsContainer);
                         InventorySlotUI slot = slotObj.GetComponent<InventorySlotUI>();
 
-                        slot.Initialize((int)equipSlot, PlayerInventory.SlotType.Equipment, playerInventory, this);
+                        slot.Initialize((int)equipSlot, SlotType.Equipment, playerInventory, this);
                         equipmentSlots[equipSlot] = slot;
 
                         // 이벤트 트리거 컴포넌트 추가 (툴팁 표시용)
@@ -180,7 +185,7 @@ namespace Breadcrumbs.ItemSystem {
                     GameObject slotObj = Instantiate(equipmentSlotPrefab, equipmentSlotsContainer);
                     InventorySlotUI slot = slotObj.GetComponent<InventorySlotUI>();
 
-                    slot.Initialize((int)equipSlot, PlayerInventory.SlotType.Equipment, playerInventory, this);
+                    slot.Initialize((int)equipSlot, SlotType.Equipment, playerInventory, this);
                     equipmentSlots[equipSlot] = slot;
 
                     // 이벤트 트리거 컴포넌트 추가 (툴팁 표시용)
@@ -224,7 +229,7 @@ namespace Breadcrumbs.ItemSystem {
         }
 
         // 모든 슬롯 업데이트
-        private void UpdateAllSlots() {
+        public void UpdateAllSlots() {
             // 인벤토리 슬롯 업데이트
             for (int i = 0; i < inventorySlots.Count; i++) {
                 InventorySlot slot = playerInventory.GetInventorySlot(i);
@@ -329,10 +334,10 @@ namespace Breadcrumbs.ItemSystem {
         }
 
         // 슬롯에 있는 아이템 데이터 가져오기
-        public ItemData GetItemAtSlot(PlayerInventory.SlotType slotType, int slotIndex) {
-            if (slotType == PlayerInventory.SlotType.Inventory) {
+        public ItemData GetItemAtSlot(SlotType slotType, int slotIndex) {
+            if (slotType == SlotType.Inventory) {
                 return playerInventory.GetInventorySlot(slotIndex).item;
-            } else if (slotType == PlayerInventory.SlotType.Equipment) {
+            } else if (slotType == SlotType.Equipment) {
                 return playerInventory.GetEquipmentSlot((EquipmentSlot)slotIndex).item;
             }
 
@@ -340,10 +345,10 @@ namespace Breadcrumbs.ItemSystem {
         }
 
         // 슬롯에 있는 아이템 수량 가져오기
-        public int GetQuantityAtSlot(PlayerInventory.SlotType slotType, int slotIndex) {
-            if (slotType == PlayerInventory.SlotType.Inventory) {
+        public int GetQuantityAtSlot(SlotType slotType, int slotIndex) {
+            if (slotType == SlotType.Inventory) {
                 return playerInventory.GetInventorySlot(slotIndex).quantity;
-            } else if (slotType == PlayerInventory.SlotType.Equipment) {
+            } else if (slotType == SlotType.Equipment) {
                 return playerInventory.GetEquipmentSlot((EquipmentSlot)slotIndex).quantity;
             }
 

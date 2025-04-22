@@ -1,4 +1,5 @@
-using Breadcrumbs.InventorySystem;
+using Breadcrumbs.CharacterSystem;
+using Breadcrumbs.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -69,7 +70,7 @@ namespace Breadcrumbs.ItemSystem {
             int splitQuantity = Mathf.RoundToInt(quantitySlider.value);
 
             // 아이템 분할 처리
-            if (targetSlot.slotType == PlayerInventory.SlotType.Inventory) {
+            if (targetSlot.slotType == SlotType.Inventory) {
                 playerInventory.SplitItem(targetSlot.slotIndex, splitQuantity);
             }
 

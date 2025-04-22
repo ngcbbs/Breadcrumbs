@@ -1,3 +1,5 @@
+using Breadcrumbs.CharacterSystem;
+using Breadcrumbs.Core;
 using Breadcrumbs.InventorySystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -48,9 +50,9 @@ namespace Breadcrumbs.ItemSystem {
             rt.position = position;
 
             // 버튼 표시 여부 설정
-            useButton.gameObject.SetActive(item != null && item.IsConsumable() && slot.slotType == PlayerInventory.SlotType.Inventory);
-            equipButton.gameObject.SetActive(item != null && item.IsEquipment() && slot.slotType == PlayerInventory.SlotType.Inventory);
-            unequipButton.gameObject.SetActive(slot.slotType == PlayerInventory.SlotType.Equipment);
+            useButton.gameObject.SetActive(item != null && item.IsConsumable() && slot.slotType == SlotType.Inventory);
+            equipButton.gameObject.SetActive(item != null && item.IsEquipment() && slot.slotType == SlotType.Inventory);
+            unequipButton.gameObject.SetActive(slot.slotType == SlotType.Equipment);
             dropButton.gameObject.SetActive(true);
             splitButton.gameObject.SetActive(
                 item != null && inventoryManager.GetQuantityAtSlot(slot.slotType, slot.slotIndex) > 1);
@@ -61,7 +63,7 @@ namespace Breadcrumbs.ItemSystem {
 
         // 사용 버튼 클릭
         private void OnUseButtonClicked() {
-            if (targetSlot.slotType == PlayerInventory.SlotType.Inventory) {
+            if (targetSlot.slotType == SlotType.Inventory) {
                 playerInventory.UseItem(targetSlot.slotIndex);
             }
 
@@ -70,7 +72,7 @@ namespace Breadcrumbs.ItemSystem {
 
         // 장착 버튼 클릭
         private void OnEquipButtonClicked() {
-            if (targetSlot.slotType == PlayerInventory.SlotType.Inventory) {
+            if (targetSlot.slotType == SlotType.Inventory) {
                 playerInventory.EquipItem(targetSlot.slotIndex);
             }
 
@@ -79,7 +81,7 @@ namespace Breadcrumbs.ItemSystem {
 
         // 장착 해제 버튼 클릭
         private void OnUnequipButtonClicked() {
-            if (targetSlot.slotType == PlayerInventory.SlotType.Equipment) {
+            if (targetSlot.slotType == SlotType.Equipment) {
                 playerInventory.UnequipItem(targetSlot.equipSlot);
             }
 
@@ -88,11 +90,10 @@ namespace Breadcrumbs.ItemSystem {
 
         // 버리기 버튼 클릭
         private void OnDropButtonClicked() {
-            if (targetSlot.slotType == PlayerInventory.SlotType.Inventory) {
+            if (targetSlot.slotType == SlotType.Inventory) {
                 inventoryManager.ShowDropItemDialog(targetSlot);
-            } else if (targetSlot.slotType == PlayerInventory.SlotType.Equipment) {
+            } else if (targetSlot.slotType == SlotType.Equipment) {
                 // 장비 아이템 직접 버리기
-                // todo: 장비 아이템 데이터 엑세스 잘 되는지 확인 필요.
                 ItemData item = inventoryManager.GetItemAtSlot(targetSlot.slotType, targetSlot.slotIndex);
                 if (item != null) {
                     playerInventory.UnequipAndDropItem(targetSlot.equipSlot);

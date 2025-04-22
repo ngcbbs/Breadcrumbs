@@ -1,3 +1,5 @@
+using Breadcrumbs.CharacterSystem;
+using Breadcrumbs.Core;
 using Breadcrumbs.InventorySystem;
 using TMPro;
 using UnityEngine;
@@ -27,7 +29,7 @@ namespace Breadcrumbs.ItemSystem {
 
         // 슬롯 속성
         public int slotIndex { get; private set; }
-        public PlayerInventory.SlotType slotType { get; private set; }
+        public SlotType slotType { get; private set; }
         public EquipmentSlot equipSlot { get; private set; }
 
         // 슬롯 상태
@@ -43,14 +45,14 @@ namespace Breadcrumbs.ItemSystem {
         private static InventorySlotUI draggingSlot;
 
         // 초기화 메서드
-        public void Initialize(int index, PlayerInventory.SlotType type, PlayerInventory inventory, InventoryUIManager manager) {
+        public void Initialize(int index, SlotType type, PlayerInventory inventory, InventoryUIManager manager) {
             slotIndex = index;
             slotType = type;
             playerInventory = inventory;
             inventoryManager = manager;
 
             // 장비 슬롯인 경우 장비 슬롯 타입 설정
-            if (type == PlayerInventory.SlotType.Equipment) {
+            if (type == SlotType.Equipment) {
                 equipSlot = (EquipmentSlot)index;
             }
 
@@ -102,9 +104,9 @@ namespace Breadcrumbs.ItemSystem {
 
                     // 더블 클릭: 아이템 사용/장착
                     if (eventData.clickCount == 2) {
-                        if (slotType == PlayerInventory.SlotType.Inventory) {
+                        if (slotType == SlotType.Inventory) {
                             playerInventory.UseItem(slotIndex);
-                        } else if (slotType == PlayerInventory.SlotType.Equipment) {
+                        } else if (slotType == SlotType.Equipment) {
                             playerInventory.UnequipItem(equipSlot);
                         }
                     }
@@ -166,11 +168,11 @@ namespace Breadcrumbs.ItemSystem {
             // 슬롯 간 아이템 이동 처리
             if (draggingSlot != null && draggingSlot != this) {
                 // 인벤토리 슬롯 간 이동
-                if (draggingSlot.slotType == PlayerInventory.SlotType.Inventory && slotType == PlayerInventory.SlotType.Inventory) {
+                if (draggingSlot.slotType == SlotType.Inventory && slotType == SlotType.Inventory) {
                     playerInventory.MoveItem(draggingSlot.slotIndex, slotIndex);
                 }
                 // 인벤토리에서 장비 슬롯으로 이동
-                else if (draggingSlot.slotType == PlayerInventory.SlotType.Inventory && slotType == PlayerInventory.SlotType.Equipment) {
+                else if (draggingSlot.slotType == SlotType.Inventory && slotType == SlotType.Equipment) {
                     // 장착 가능한 슬롯인지 확인
                     ItemData item = inventoryManager.GetItemAtSlot(draggingSlot.slotType, draggingSlot.slotIndex);
                     if (item != null && item.IsEquipment() &&
@@ -180,13 +182,13 @@ namespace Breadcrumbs.ItemSystem {
                     }
                 }
                 // 장비 슬롯에서 인벤토리로 이동
-                else if (draggingSlot.slotType == PlayerInventory.SlotType.Equipment && slotType == PlayerInventory.SlotType.Inventory) {
+                else if (draggingSlot.slotType == SlotType.Equipment && slotType == SlotType.Inventory) {
                     if (isEmpty) {
                         playerInventory.UnequipItem(draggingSlot.equipSlot);
                     }
                 }
                 // 장비 슬롯 간 이동 (반지만 가능)
-                else if (draggingSlot.slotType == PlayerInventory.SlotType.Equipment && slotType == PlayerInventory.SlotType.Equipment) {
+                else if (draggingSlot.slotType == SlotType.Equipment && slotType == SlotType.Equipment) {
                     if ((draggingSlot.equipSlot == EquipmentSlot.Ring1 || draggingSlot.equipSlot == EquipmentSlot.Ring2) &&
                         (equipSlot == EquipmentSlot.Ring1 || equipSlot == EquipmentSlot.Ring2)) {
                         // 반지 슬롯 간 교체 로직

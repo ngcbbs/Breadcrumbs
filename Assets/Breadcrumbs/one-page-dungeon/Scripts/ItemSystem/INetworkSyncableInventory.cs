@@ -1,3 +1,5 @@
+using Breadcrumbs.Core;
+
 namespace Breadcrumbs.ItemSystem {
     // 네트워크 인터페이스 - 인벤토리 동기화
     public interface INetworkSyncableInventory {

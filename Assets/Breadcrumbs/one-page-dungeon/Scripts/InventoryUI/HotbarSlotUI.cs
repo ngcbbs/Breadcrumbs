@@ -1,3 +1,4 @@
+using Breadcrumbs.CharacterSystem;
 using Breadcrumbs.InventorySystem;
 using TMPro;
 using UnityEngine;

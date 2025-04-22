@@ -1,3 +1,5 @@
+using Breadcrumbs.CharacterSystem;
+using Breadcrumbs.Core;
 using Breadcrumbs.InventorySystem;
 using TMPro;
 using UnityEngine;
@@ -69,8 +71,11 @@ namespace Breadcrumbs.ItemSystem {
             int dropQuantity = Mathf.RoundToInt(quantitySlider.value);
 
             // 아이템 버리기 처리
-            if (targetSlot.slotType == PlayerInventory.SlotType.Inventory) {
+            if (targetSlot.slotType == SlotType.Inventory) {
+                // todo: fixme
+                /*
                 playerInventory.DropItem(targetSlot.slotIndex, dropQuantity);
+                // */
             }
 
             Close();

@@ -1,3 +1,5 @@
+using Breadcrumbs.CharacterSystem;
+using Breadcrumbs.Core;
 using Breadcrumbs.InventorySystem;
 using UnityEngine;
 
@@ -8,7 +10,7 @@ namespace Breadcrumbs.ItemSystem {
         private CanvasGroup canvasGroup;
 
         // 오버라이드된 초기화 메서드
-        public new void Initialize(int index, PlayerInventory.SlotType type, PlayerInventory inventory, InventoryUIManager manager) {
+        public new void Initialize(int index, SlotType type, PlayerInventory inventory, InventoryUIManager manager) {
             base.Initialize(index, type, inventory, manager);
 
             canvasGroup = GetComponent<CanvasGroup>();

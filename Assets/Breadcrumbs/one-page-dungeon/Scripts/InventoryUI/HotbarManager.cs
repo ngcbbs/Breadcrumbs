@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using Breadcrumbs.InventorySystem;
+using Breadcrumbs.CharacterSystem;
+using Breadcrumbs.Core;
 using UnityEngine;
 
 namespace Breadcrumbs.ItemSystem {
@@ -23,7 +24,7 @@ namespace Breadcrumbs.ItemSystem {
             CreateHotbarSlots();
 
             // 인벤토리 이벤트 구독
-            playerInventory.OnSlotChanged += OnInventorySlotChanged;
+            EventManager.Subscribe("Inventory.SlotChanged", OnInventorySlotChanged);
 
             // 저장된 핫바 설정 로드
             LoadHotbarSettings();
@@ -49,10 +50,11 @@ namespace Breadcrumbs.ItemSystem {
         }
 
         // 인벤토리 슬롯 변경 이벤트 핸들러
-        private void OnInventorySlotChanged(int slotIndex) {
+        private void OnInventorySlotChanged(object @event) {
+            var eventData = @event as InventorySlotChangedEventData;
             // 영향을 받는 핫바 슬롯 업데이트
             foreach (var hotbarSlot in hotbarSlots) {
-                if (hotbarSlot.GetLinkedInventorySlot() == slotIndex) {
+                if (hotbarSlot.GetLinkedInventorySlot() == eventData.SlotIndex) {
                     hotbarSlot.UpdateVisuals();
                 }
             }

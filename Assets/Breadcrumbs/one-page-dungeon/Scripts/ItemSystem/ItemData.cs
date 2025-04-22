@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Breadcrumbs.Core;
 using UnityEngine;
 
 namespace Breadcrumbs.ItemSystem {

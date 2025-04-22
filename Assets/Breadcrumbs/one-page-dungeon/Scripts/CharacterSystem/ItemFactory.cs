@@ -1,22 +1,6 @@
+using Breadcrumbs.Core;
+
 namespace Breadcrumbs.CharacterSystem {
-    // 장비 슬롯
-
-    // 무기 타입
-
-    // 방어구 타입
-
-    // 아이템 희귀도
-
-    // 장비 아이템 기본 클래스
-
-    // 무기 아이템
-
-    // 방어구 아이템
-
-    // 액세서리 아이템
-
-    // 장비 세트 데이터
-
     // 아이템 생성 팩토리
     public class ItemFactory {
         // 기본 아이템 프리셋 생성

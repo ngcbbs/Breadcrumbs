@@ -1,4 +1,4 @@
-using Breadcrumbs.InventorySystem;
+using Breadcrumbs.CharacterSystem;
 using Breadcrumbs.LootingSystem;
 using UnityEngine;
 
@@ -45,8 +45,11 @@ namespace Breadcrumbs.ItemSystem {
             if (hotbarManager != null)
                 hotbarManager.Initialize(playerInventory);
 
+            // todo: fixme 이벤트 핸들링 수정 필요.
+            /*
             // 아이템 획득 이벤트 구독
             playerInventory.OnItemPickedUp += OnItemPickedUp;
+            // */
         }
 
         private void Update() {
@@ -123,7 +126,7 @@ namespace Breadcrumbs.ItemSystem {
         }
 
         // 아이템 획득 이벤트 핸들러
-        private void OnItemPickedUp(ItemData item) {
+        public void OnItemPickedUp(ItemData item) {
             if (pickupNotification != null) {
                 // 아이템 획득 알림 표시
                 pickupNotification.ShowItemPickupNotification(item, 1);

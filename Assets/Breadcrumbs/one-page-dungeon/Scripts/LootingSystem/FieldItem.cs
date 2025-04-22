@@ -1,6 +1,7 @@
-using Breadcrumbs.InventorySystem;
+using Breadcrumbs.CharacterSystem;
 using Breadcrumbs.ItemSystem;
 using UnityEngine;
+using ItemRarity = Breadcrumbs.ItemSystem.ItemRarity;
 
 namespace Breadcrumbs.LootingSystem {
     public class FieldItem : MonoBehaviour, INetworkSyncableItem {
