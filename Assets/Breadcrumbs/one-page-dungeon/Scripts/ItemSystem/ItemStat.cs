@@ -3,7 +3,7 @@ using System;
 namespace Breadcrumbs.ItemSystem {
     [Serializable]
     public class ItemStat {
-        public enum StatType {
+        public enum Status {
             Attack,
             Defense,
             Health,
@@ -14,7 +14,7 @@ namespace Breadcrumbs.ItemSystem {
             AttackSpeed
         }
 
-        public StatType type;
+        public Status type;
         public float value;
     }
 }
