@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Breadcrumbs.Core;
 using Breadcrumbs.InventorySystem;
+using Breadcrumbs.ItemSystem;
 
 namespace Breadcrumbs.CharacterSystem {
     public class PlayerCharacter : MonoBehaviour {
@@ -241,7 +242,7 @@ namespace Breadcrumbs.CharacterSystem {
 
             // 클래스 착용 가능 여부 확인
             if (!CanEquipItem(item)) {
-                Debug.Log($"Cannot equip {item.itemName}: class or level restriction");
+                Debug.Log($"Cannot equip {item.ItemName}: class or level restriction");
                 return false;
             }
 
@@ -264,21 +265,21 @@ namespace Breadcrumbs.CharacterSystem {
         // 아이템 장착 가능 여부 확인
         private bool CanEquipItem(EquipmentItem item) {
             // 레벨 확인
-            if (stats.Level < item.requiredLevel)
+            if (stats.Level < item.RequiredLevel)
                 return false;
 
             // 클래스 확인
-            if (item.classType != ClassType.None && item.classType != classType)
+            if (item.ClassType != ClassType.None && item.ClassType != classType)
                 return false;
 
             // 무기 타입 확인
             if (item is WeaponItem weapon) {
-                return classData.usableWeaponTypes.Contains(weapon.weaponType);
+                return classData.usableWeaponTypes.Contains(weapon.WeaponType);
             }
 
             // 방어구 타입 확인
             if (item is ArmorItem armor) {
-                return classData.usableArmorTypes.Contains(armor.armorType);
+                return classData.usableArmorTypes.Contains(armor.ArmorType);
             }
 
             return true;
@@ -308,8 +309,15 @@ namespace Breadcrumbs.CharacterSystem {
                 foreach (EquipmentSlot slot in Enum.GetValues(typeof(EquipmentSlot))) {
                     var slotItem = inventory.GetEquipmentSlot(slot);
                     if (!slotItem.IsEmpty()) {
-                        Debug.Log(
-                            $"  - {slot}: {slotItem.item.itemName} ({slotItem.item.rarity})");
+                        switch (slotItem.item) {
+                            case ItemData itemData:
+                                Debug.Log(
+                                    $"  - {slot}: {itemData.itemName} ({itemData.rarity})");
+                                break;
+                            default:
+                                Debug.Log("an other types..");
+                                break;
+                        }
                     }
                 }
             }
@@ -369,7 +377,19 @@ namespace Breadcrumbs.CharacterSystem {
                 foreach (EquipmentSlot slot in Enum.GetValues(typeof(EquipmentSlot))) {
                     InventorySlot equipSlot = inventory.GetEquipmentSlot(slot);
                     if (!equipSlot.IsEmpty()) {
-                        saveData.equippedItems[slot] = equipSlot.item.itemId;
+                        switch (equipSlot.item) {
+                            case ItemData itemData:
+                                saveData.equippedItems[slot] = itemData.itemId;
+                                break;
+                            /*
+                            case EquipmentItem equipmentItem:
+                                saveData.equippedItems[slot] = equipmentItem.itemId;
+                                break;
+                            default:
+                                Debug.LogError("todo: 장비 저장 수정 필요.");
+                                break;
+                            // */
+                        }
                     }
                 }
             }

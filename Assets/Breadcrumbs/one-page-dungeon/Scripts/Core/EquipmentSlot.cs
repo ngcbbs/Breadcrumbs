@@ -1,5 +1,6 @@
 namespace Breadcrumbs.Core {
     public enum EquipmentSlot {
+        None,
         Head,
         Chest,
         Legs,

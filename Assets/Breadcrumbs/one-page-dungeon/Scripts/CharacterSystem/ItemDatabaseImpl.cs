@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Breadcrumbs.Core;
 using UnityEngine;
 
 namespace Breadcrumbs.CharacterSystem {
@@ -60,7 +61,7 @@ namespace Breadcrumbs.CharacterSystem {
             List<EquipmentItem> results = new List<EquipmentItem>();
             
             foreach (var item in itemsById.Values) {
-                if (item.classType == classType || item.classType == ClassType.None) {
+                if (item.ClassType == classType || item.ClassType == ClassType.None) {
                     results.Add(item);
                 }
             }
@@ -72,7 +73,7 @@ namespace Breadcrumbs.CharacterSystem {
             List<EquipmentItem> results = new List<EquipmentItem>();
             
             foreach (var item in itemsById.Values) {
-                if (item.requiredLevel <= maxLevel) {
+                if (item.RequiredLevel <= maxLevel) {
                     results.Add(item);
                 }
             }
@@ -84,7 +85,7 @@ namespace Breadcrumbs.CharacterSystem {
             List<EquipmentItem> results = new List<EquipmentItem>();
             
             foreach (var item in itemsById.Values) {
-                if (item.rarity == rarity) {
+                if (item.Rarity == rarity) {
                     results.Add(item);
                 }
             }

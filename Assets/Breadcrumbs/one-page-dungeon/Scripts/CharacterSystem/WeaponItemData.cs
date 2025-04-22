@@ -31,31 +31,32 @@ namespace Breadcrumbs.CharacterSystem {
         
         public WeaponItem CreateWeaponItem() {
             WeaponItem weapon = new WeaponItem {
-                itemId = this.itemId,
-                itemName = this.itemName,
-                description = this.description,
-                icon = this.icon,
-                equipSlot = isTwoHanded ? EquipmentSlot.TwoHand : EquipmentSlot.MainHand,
-                requiredLevel = this.requiredLevel,
-                classType = this.classType,
-                itemLevel = this.itemLevel,
-                rarity = this.rarity,
-                weaponType = this.weaponType,
-                baseDamage = this.baseDamage,
-                attackSpeed = this.attackSpeed,
-                range = this.range,
-                isTwoHanded = this.isTwoHanded,
-                elementType = this.elementType,
-                elementalDamage = this.elementalDamage,
-                attackEffect = this.attackEffect,
-                attackSound = this.attackSound,
-                itemModel = this.itemModel,
-                primaryColor = this.primaryColor,
-                secondaryColor = this.secondaryColor,
-                setName = this.setName
+                ItemId = this.itemId,
+                ItemName = this.itemName,
+                Description = this.description,
+                Icon = this.icon,
+                EquipSlot = isTwoHanded ? EquipmentSlot.TwoHand : EquipmentSlot.MainHand,
+                RequiredLevel = this.requiredLevel,
+                ClassType = this.classType,
+                ItemLevel = this.itemLevel,
+                Rarity = this.rarity,
+                WeaponType = this.weaponType,
+                BaseDamage = this.baseDamage,
+                AttackSpeed = this.attackSpeed,
+                Range = this.range,
+                IsTwoHanded = this.isTwoHanded,
+                ElementType = this.elementType,
+                ElementalDamage = this.elementalDamage,
+                AttackEffect = this.attackEffect,
+                AttackSound = this.attackSound,
+                ItemModel = this.itemModel,
+                PrimaryColor = this.primaryColor,
+                SecondaryColor = this.secondaryColor,
+                SetName = this.setName
             };
             
             // 스탯 추가
+            /*
             foreach (var statData in stats) {
                 weapon.stats.Add(new EquipmentItem.ItemStat {
                     statType = statData.statType,
@@ -63,8 +64,10 @@ namespace Breadcrumbs.CharacterSystem {
                     type = statData.type
                 });
             }
+            // */
             
             // 특수 효과 추가
+            /*
             foreach (var effectData in specialEffects) {
                 weapon.specialEffects.Add(new EquipmentItem.SpecialEffect {
                     effectName = effectData.effectName,
@@ -74,6 +77,8 @@ namespace Breadcrumbs.CharacterSystem {
                     soundEffect = effectData.soundEffect
                 });
             }
+            // */
+            Debug.Log("fixme");
             
             return weapon;
         }

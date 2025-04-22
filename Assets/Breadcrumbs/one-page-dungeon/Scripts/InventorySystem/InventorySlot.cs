@@ -1,4 +1,5 @@
 using System;
+using Breadcrumbs.Core;
 using Breadcrumbs.ItemSystem;
 
 namespace Breadcrumbs.InventorySystem {

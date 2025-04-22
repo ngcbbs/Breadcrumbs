@@ -30,29 +30,30 @@ namespace Breadcrumbs.CharacterSystem {
         
         public ArmorItem CreateArmorItem() {
             ArmorItem armor = new ArmorItem {
-                itemId = this.itemId,
-                itemName = this.itemName,
-                description = this.description,
-                icon = this.icon,
-                equipSlot = this.equipSlot,
-                requiredLevel = this.requiredLevel,
-                classType = this.classType,
-                itemLevel = this.itemLevel,
-                rarity = this.rarity,
-                armorType = this.armorType,
-                baseDefense = this.baseDefense,
-                magicDefense = this.magicDefense,
-                movementPenalty = this.movementPenalty,
-                hasSetBonus = this.hasSetBonus,
-                defendEffect = this.defendEffect,
-                defendSound = this.defendSound,
-                itemModel = this.itemModel,
-                primaryColor = this.primaryColor,
-                secondaryColor = this.secondaryColor,
-                setName = this.setName
+                ItemId = itemId,
+                ItemName = itemName,
+                Description = description,
+                Icon = icon,
+                EquipSlot = equipSlot,
+                RequiredLevel = requiredLevel,
+                ClassType = classType,
+                ItemLevel = itemLevel,
+                Rarity = rarity,
+                ArmorType = armorType,
+                BaseDefense = baseDefense,
+                MagicDefense = magicDefense,
+                MovementPenalty = movementPenalty,
+                HasSetBonus = hasSetBonus,
+                DefendEffect = defendEffect,
+                DefendSound = defendSound,
+                ItemModel = itemModel,
+                PrimaryColor = primaryColor,
+                SecondaryColor = secondaryColor,
+                SetName = setName
             };
             
             // 스탯 추가
+            /*
             foreach (var statData in stats) {
                 armor.stats.Add(new EquipmentItem.ItemStat {
                     statType = statData.statType,
@@ -60,8 +61,10 @@ namespace Breadcrumbs.CharacterSystem {
                     type = statData.type
                 });
             }
+            // */
             
             // 특수 효과 추가
+            /*
             foreach (var effectData in specialEffects) {
                 armor.specialEffects.Add(new EquipmentItem.SpecialEffect {
                     effectName = effectData.effectName,
@@ -71,6 +74,8 @@ namespace Breadcrumbs.CharacterSystem {
                     soundEffect = effectData.soundEffect
                 });
             }
+            // */
+            Debug.Log("fixme!");
             
             return armor;
         }

@@ -63,7 +63,9 @@ namespace Breadcrumbs.ItemSystem {
                 } else {
                     // 아이템 표시
                     itemIconImage.gameObject.SetActive(true);
-                    itemIconImage.sprite = slot.item.icon;
+                    var itemData = slot.item as ItemData;
+                    if (itemData != null)
+                        itemIconImage.sprite = itemData.icon;
 
                     // 수량 표시 (1개 이상인 경우만)
                     quantityText.gameObject.SetActive(slot.quantity > 1);

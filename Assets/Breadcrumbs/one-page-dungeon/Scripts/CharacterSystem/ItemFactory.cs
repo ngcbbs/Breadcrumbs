@@ -1,4 +1,5 @@
 using Breadcrumbs.Core;
+using UnityEngine;
 
 namespace Breadcrumbs.CharacterSystem {
     // 아이템 생성 팩토리
@@ -6,18 +7,18 @@ namespace Breadcrumbs.CharacterSystem {
         // 기본 아이템 프리셋 생성
         public static WeaponItem CreateWeapon(WeaponType type, int itemLevel, ItemRarity rarity) {
             WeaponItem weapon = new WeaponItem {
-                itemId = $"WPN_{type}_{System.Guid.NewGuid().ToString().Substring(0, 8)}",
-                itemName = $"{rarity} {type}",
-                itemLevel = itemLevel,
-                rarity = rarity,
-                weaponType = type
+                ItemId = $"WPN_{type}_{System.Guid.NewGuid().ToString().Substring(0, 8)}",
+                ItemName = $"{rarity} {type}",
+                ItemLevel = itemLevel,
+                Rarity = rarity,
+                WeaponType = type
             };
 
             // 기본 값 설정
-            weapon.baseDamage = CalculateBaseDamage(type, itemLevel, rarity);
-            weapon.attackSpeed = GetBaseAttackSpeed(type);
-            weapon.range = GetWeaponRange(type);
-            weapon.isTwoHanded = IsTwoHandedWeapon(type);
+            weapon.BaseDamage = CalculateBaseDamage(type, itemLevel, rarity);
+            weapon.AttackSpeed = GetBaseAttackSpeed(type);
+            weapon.Range = GetWeaponRange(type);
+            weapon.IsTwoHanded = IsTwoHandedWeapon(type);
 
             // 레어리티에 따른 추가 스탯
             if (rarity >= ItemRarity.Uncommon)
@@ -32,17 +33,17 @@ namespace Breadcrumbs.CharacterSystem {
 
         public static ArmorItem CreateArmor(ArmorType type, EquipmentSlot slot, int itemLevel, ItemRarity rarity) {
             ArmorItem armor = new ArmorItem {
-                itemId = $"ARM_{type}_{slot}_{System.Guid.NewGuid().ToString().Substring(0, 8)}",
-                itemName = $"{rarity} {type} {slot}",
-                itemLevel = itemLevel,
-                rarity = rarity,
-                armorType = type,
-                equipSlot = slot
+                ItemId = $"ARM_{type}_{slot}_{System.Guid.NewGuid().ToString().Substring(0, 8)}",
+                ItemName = $"{rarity} {type} {slot}",
+                ItemLevel = itemLevel,
+                Rarity = rarity,
+                ArmorType = type,
+                EquipSlot = slot
             };
 
             // 기본 값 설정
-            armor.baseDefense = CalculateBaseDefense(type, slot, itemLevel, rarity);
-            armor.magicDefense = CalculateBaseMagicDefense(type, slot, itemLevel, rarity);
+            armor.BaseDefense = CalculateBaseDefense(type, slot, itemLevel, rarity);
+            armor.MagicDefense = CalculateBaseMagicDefense(type, slot, itemLevel, rarity);
 
             // 방어구 타입별 특성
             SetArmorTypeStats(armor, type);
@@ -60,11 +61,11 @@ namespace Breadcrumbs.CharacterSystem {
 
         public static AccessoryItem CreateAccessory(EquipmentSlot slot, int itemLevel, ItemRarity rarity) {
             AccessoryItem accessory = new AccessoryItem {
-                itemId = $"ACC_{slot}_{System.Guid.NewGuid().ToString().Substring(0, 8)}",
-                itemName = $"{rarity} {slot}",
-                itemLevel = itemLevel,
-                rarity = rarity,
-                equipSlot = slot
+                ItemId = $"ACC_{slot}_{System.Guid.NewGuid().ToString().Substring(0, 8)}",
+                ItemName = $"{rarity} {slot}",
+                ItemLevel = itemLevel,
+                Rarity = rarity,
+                EquipSlot = slot
             };
 
             // 액세서리는 특별한 스탯만 가짐
@@ -74,13 +75,13 @@ namespace Breadcrumbs.CharacterSystem {
 
             // 유니크 효과 (확률적)
             if (rarity >= ItemRarity.Epic && UnityEngine.Random.value < 0.3f) {
-                accessory.isUnique = true;
+                accessory.IsUnique = true;
                 // 특별한 유니크 효과 추가
             }
 
             // 발동 효과 (확률적)
             if (rarity >= ItemRarity.Rare && UnityEngine.Random.value < 0.4f) {
-                accessory.hasProc = true;
+                accessory.HasProc = true;
                 AddRandomSpecialEffect(accessory, rarity);
             }
 
@@ -305,19 +306,19 @@ namespace Breadcrumbs.CharacterSystem {
         private static void SetArmorTypeStats(ArmorItem armor, ArmorType type) {
             switch (type) {
                 case ArmorType.Cloth:
-                    armor.movementPenalty = 0f;
+                    armor.MovementPenalty = 0f;
                     break;
                 case ArmorType.Leather:
-                    armor.movementPenalty = 0.02f;
+                    armor.MovementPenalty = 0.02f;
                     break;
                 case ArmorType.Mail:
-                    armor.movementPenalty = 0.05f;
+                    armor.MovementPenalty = 0.05f;
                     break;
                 case ArmorType.Plate:
-                    armor.movementPenalty = 0.1f;
+                    armor.MovementPenalty = 0.1f;
                     break;
                 case ArmorType.Robe:
-                    armor.movementPenalty = 0f;
+                    armor.MovementPenalty = 0f;
                     break;
             }
         }
@@ -343,7 +344,7 @@ namespace Breadcrumbs.CharacterSystem {
         // 랜덤 무기 스탯 추가
         private static void AddRandomWeaponStats(WeaponItem weapon, ItemRarity rarity) {
             // 무기 타입에 따른 기본 스탯 추가
-            switch (weapon.weaponType) {
+            switch (weapon.WeaponType) {
                 case WeaponType.Sword:
                 case WeaponType.Axe:
                 case WeaponType.Mace:
@@ -376,15 +377,15 @@ namespace Breadcrumbs.CharacterSystem {
             // 레어 이상은 랜덤 속성 추가 가능성
             if (rarity >= ItemRarity.Rare && UnityEngine.Random.value < 0.3f) {
                 ElementType[] elements = { ElementType.Fire, ElementType.Ice, ElementType.Lightning, ElementType.Earth };
-                weapon.elementType = elements[UnityEngine.Random.Range(0, elements.Length)];
-                weapon.elementalDamage = weapon.baseDamage * (0.1f + ((int)rarity - 2) * 0.1f); // 레어: 10%, 에픽: 20%, 레전더리: 30%
+                weapon.ElementType = elements[UnityEngine.Random.Range(0, elements.Length)];
+                weapon.ElementalDamage = weapon.BaseDamage * (0.1f + ((int)rarity - 2) * 0.1f); // 레어: 10%, 에픽: 20%, 레전더리: 30%
             }
         }
 
         // 랜덤 방어구 스탯 추가
         private static void AddRandomArmorStats(ArmorItem armor, ItemRarity rarity) {
             // 방어구 타입에 따른 기본 스탯 추가
-            switch (armor.armorType) {
+            switch (armor.ArmorType) {
                 case ArmorType.Plate:
                     AddStatToItem(armor, StatType.Strength, itemValueByRarity(3, rarity));
                     AddStatToItem(armor, StatType.Vitality, itemValueByRarity(5, rarity));
@@ -419,13 +420,15 @@ namespace Breadcrumbs.CharacterSystem {
 
             // 에픽 이상은 세트 효과 가능성
             if (rarity >= ItemRarity.Epic && UnityEngine.Random.value < 0.4f) {
-                armor.hasSetBonus = true;
-                armor.setName = $"{armor.armorType} of the {GetRandomSetName()}";
+                armor.HasSetBonus = true;
+                armor.SetName = $"{armor.ArmorType} of the {GetRandomSetName()}";
             }
         }
 
         // 장비에 스탯 추가
         private static void AddStatToItem(EquipmentItem item, StatType statType, float value) {
+            Debug.Log("fixme");
+            /*
             EquipmentItem.ItemStat stat = new EquipmentItem.ItemStat {
                 statType = statType,
                 value = value,
@@ -433,6 +436,7 @@ namespace Breadcrumbs.CharacterSystem {
             };
 
             item.stats.Add(stat);
+            // */
         }
 
         // 랜덤 스탯 추가
@@ -490,6 +494,7 @@ namespace Breadcrumbs.CharacterSystem {
             // 발동 확률은 레어리티에 따라 증가
             float chance = 0.05f + ((int)rarity - 2) * 0.05f; // 레어: 5%, 에픽: 10%, 레전더리: 15%
 
+            /*
             // 특수 효과 생성
             EquipmentItem.SpecialEffect effect = new EquipmentItem.SpecialEffect {
                 effectName = effectNames[UnityEngine.Random.Range(0, effectNames.Length)],
@@ -500,6 +505,8 @@ namespace Breadcrumbs.CharacterSystem {
             };
 
             item.specialEffects.Add(effect);
+            // */
+            Debug.Log("fixme: AddRandomSpecialEffect");
         }
 
         // 아이템 레어리티별 스탯값 계산

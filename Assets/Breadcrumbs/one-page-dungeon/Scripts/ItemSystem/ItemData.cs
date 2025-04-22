@@ -16,6 +16,9 @@ namespace Breadcrumbs.ItemSystem {
         public int maxStackSize = 1; // 최대 중첩 수 (장비는 1, 소모품/재료는 999 등)
         public bool isAutoPickup = false; // 자동 획득 여부
 
+        public int buyPrice = 100;
+        public int sellPrice = 50;
+
         [Header("Equipment Info")]
         public EquipmentSlot equipSlot; // 장착 슬롯 (장비일 경우만 사용)
         public int durability = 100; // 내구도 (장비일 경우만 사용)
