@@ -1,4 +1,5 @@
 using Breadcrumbs.CharacterSystem;
+using Breadcrumbs.Core;
 using UnityEngine;
 
 namespace Breadcrumbs.ItemSystem {
