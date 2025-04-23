@@ -1,6 +1,7 @@
 # Breadcrumbs
 > Just dropping some breadcrumbs from my Unity6 + GitHub adventures.
-
+- 2024/04/23: Claude.ai를 활용한 리렉토링 테스트.
+  - MCP 관련 기능 테스트 / Claude Desktop 에서 mcp 사용이 제대로 안될때가 있음 :(
 - 2024/04/21: 인벤토리, 아이템, 루팅 시스템 초안 추가.
 - 2024/04/20: 스폰시스템 추가.
 - 2025/04/18: 플레이어 컨트롤 시스템 추가.
