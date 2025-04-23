@@ -1,4 +1,3 @@
-using Breadcrumbs.ItemSystem;
 using UnityEngine;
 
 namespace Breadcrumbs.SpawnSystem {
@@ -13,6 +12,7 @@ namespace Breadcrumbs.SpawnSystem {
         public int baseDamage;
         public float baseSpeed;
         public DifficultyLevel minimumDifficulty;
-        public DropTable possibleDrops;
+        // todo: 구현
+        //public DropTable possibleDrops;
     }
 }

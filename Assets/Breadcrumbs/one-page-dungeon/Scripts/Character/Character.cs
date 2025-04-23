@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Breadcrumbs.CharacterSystem;
-using Breadcrumbs.Skills;
+using Breadcrumbs.Character.Services;
 using UnityEngine;
 
 namespace Breadcrumbs.Character
@@ -82,12 +81,12 @@ namespace Breadcrumbs.Character
             }
             
             // Set base stats from class data
-            stats.SetBaseStat(StatType.Strength, classData.baseStrength);
-            stats.SetBaseStat(StatType.Dexterity, classData.baseDexterity);
-            stats.SetBaseStat(StatType.Intelligence, classData.baseIntelligence);
-            stats.SetBaseStat(StatType.Vitality, classData.baseVitality);
-            stats.SetBaseStat(StatType.Wisdom, classData.baseWisdom);
-            stats.SetBaseStat(StatType.Luck, classData.baseLuck);
+            stats.SetBaseStat(StatType.Strength, classData.BaseStrength);
+            stats.SetBaseStat(StatType.Dexterity, classData.BaseDexterity);
+            stats.SetBaseStat(StatType.Intelligence, classData.BaseIntelligence);
+            stats.SetBaseStat(StatType.Vitality, classData.BaseVitality);
+            stats.SetBaseStat(StatType.Wisdom, classData.BaseWisdom);
+            stats.SetBaseStat(StatType.Luck, classData.BaseLuck);
             
             // Calculate derived stats
             stats.CalculateDerivedStats(classType);
@@ -137,11 +136,11 @@ namespace Breadcrumbs.Character
         /// </summary>
         private void LearnStartingSkills()
         {
-            if (classData == null || classData.startingSkills == null) return;
+            if (classData == null || classData.StartingSkills == null) return;
             
-            foreach (var skill in classData.startingSkills)
+            foreach (var skill in classData.StartingSkills)
             {
-                LearnSkill(skill.skillId);
+                LearnSkill(skill);
             }
         }
         
@@ -151,12 +150,12 @@ namespace Breadcrumbs.Character
         private void HandleLevelUp(int newLevel)
         {
             // Apply class growth
-            stats.AddBonus(StatType.Strength, classData.strengthGrowth);
-            stats.AddBonus(StatType.Dexterity, classData.dexterityGrowth);
-            stats.AddBonus(StatType.Intelligence, classData.intelligenceGrowth);
-            stats.AddBonus(StatType.Vitality, classData.vitalityGrowth);
-            stats.AddBonus(StatType.Wisdom, classData.wisdomGrowth);
-            stats.AddBonus(StatType.Luck, classData.luckGrowth);
+            stats.AddBonus(StatType.Strength, classData.StrengthGrowth);
+            stats.AddBonus(StatType.Dexterity, classData.DexterityGrowth);
+            stats.AddBonus(StatType.Intelligence, classData.IntelligenceGrowth);
+            stats.AddBonus(StatType.Vitality, classData.VitalityGrowth);
+            stats.AddBonus(StatType.Wisdom, classData.WisdomGrowth);
+            stats.AddBonus(StatType.Luck, classData.LuckGrowth);
             
             // Recalculate derived stats
             stats.CalculateDerivedStats(classType);

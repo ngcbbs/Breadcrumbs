@@ -1,4 +1,3 @@
-using Breadcrumbs.ItemSystem;
 using UnityEngine;
 
 namespace Breadcrumbs.SpawnSystem {
@@ -45,6 +44,8 @@ namespace Breadcrumbs.SpawnSystem {
         }
 
         private void DropItems() {
+            // todo: 구현
+            /*
             if (monsterData == null || monsterData.possibleDrops == null)
                 return;
 
@@ -57,6 +58,7 @@ namespace Breadcrumbs.SpawnSystem {
                 var fieldItem = Instantiate(item.item.prefab, transform.position, Quaternion.identity);
                 Debug.Log($"{item.item.itemName}이(가) 드롭되었습니다.");
             }
+            // */
         }
     }
 }
