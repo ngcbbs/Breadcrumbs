@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Breadcrumbs.Utils {
+namespace Breadcrumbs.Singletons {
     public class PersistentSingleton<T> : MonoBehaviour where T : Component {
         public bool autoUnparentOnAwake = true;
 

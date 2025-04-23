@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Breadcrumbs.Utils {
+namespace Breadcrumbs.Singletons {
     public class RegulatorSingleton<T> : MonoBehaviour where T : Component {
         protected static T instance;
 

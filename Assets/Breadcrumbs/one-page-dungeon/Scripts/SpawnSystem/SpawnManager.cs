@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Breadcrumbs.Utils;
+using Breadcrumbs.Singletons;
 using UnityEngine;
 
 namespace Breadcrumbs.SpawnSystem {

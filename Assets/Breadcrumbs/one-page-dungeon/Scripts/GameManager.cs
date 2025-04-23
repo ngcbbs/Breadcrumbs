@@ -1,7 +1,6 @@
+using Breadcrumbs.Singletons;
 using Breadcrumbs.SpawnSystem;
-using Breadcrumbs.Utils;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Breadcrumbs.Scripts {
     [DefaultExecutionOrder(-200)]
