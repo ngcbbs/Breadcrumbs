@@ -352,10 +352,6 @@ namespace Breadcrumbs.Character.Presentation
             {
                 availablePoints = statService.GetAvailableStatPoints(Character);
             }
-            else if (Character is PlayerCharacter playerCharacter)
-            {
-                availablePoints = playerCharacter.StatPoints;
-            }
             
             statPointsText.text = $"Stat Points: {availablePoints}";
         }
@@ -373,10 +369,6 @@ namespace Breadcrumbs.Character.Presentation
             if (statService != null)
             {
                 hasPoints = statService.GetAvailableStatPoints(Character) > 0;
-            }
-            else if (Character is PlayerCharacter playerCharacter)
-            {
-                hasPoints = playerCharacter.StatPoints > 0;
             }
             
             // Enable/disable buttons
@@ -473,11 +465,7 @@ namespace Breadcrumbs.Character.Presentation
             
             int skillPoints = 0;
             
-            // Get skill points from character
-            if (Character is PlayerCharacter playerCharacter)
-            {
-                skillPoints = playerCharacter.SkillPoints;
-            }
+            // todo: Get skill points from character
             
             skillPointsText.text = $"Skill Points: {skillPoints}";
         }
@@ -495,10 +483,6 @@ namespace Breadcrumbs.Character.Presentation
             if (statService != null)
             {
                 success = statService.ApplyStatPoint(Character, statType);
-            }
-            else if (Character is PlayerCharacter playerCharacter)
-            {
-                success = playerCharacter.UseStatPoint(statType);
             }
             
             if (success)

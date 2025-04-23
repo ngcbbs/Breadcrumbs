@@ -27,7 +27,7 @@ namespace Breadcrumbs.EventSystem {
             _registeredHandlers.Clear();
         }
 
-        internal void Register(Type type, EventHandler.OnEvent action) {
+        protected void Register(Type type, EventHandler.OnEvent action) {
             EventHandler.Register(type, action);
             if (!_registeredHandlers.Contains((type, action)))
                 _registeredHandlers.Add((type, action));
@@ -35,7 +35,7 @@ namespace Breadcrumbs.EventSystem {
                 Debug.LogWarning($"이미 등록된 이벤트 핸들러입니다. ({type})");
         }
 
-        internal void Dispatch(IEvent @event) {
+        protected void Dispatch(IEvent @event) {
             EventHandler.Dispatch(@event);
         }
     }

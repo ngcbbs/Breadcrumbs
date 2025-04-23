@@ -230,6 +230,8 @@ namespace Breadcrumbs.Character.Skills
             // 노드 잠금 해제 시도
             if (currentTree != null)
             {
+                // todo: fixme
+                /*
                 bool success = skillService.UnlockSkillTreeNode(currentCharacter, currentTree.TreeId, node.NodeId);
                 
                 if (success)
@@ -238,6 +240,7 @@ namespace Breadcrumbs.Character.Skills
                     UpdateNodeStates();
                     UpdateSkillPointsDisplay();
                 }
+                // */
             }
         }
         

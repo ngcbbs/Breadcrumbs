@@ -3,13 +3,12 @@ namespace Breadcrumbs.Character
     /// <summary>
     /// Types of stat modifications
     /// </summary>
-    public enum StatModifierType
-    {
-        Flat = 100,                 // Add/subtract a flat value
-        PercentAdditive = 200,      // Add percentage modifiers (stacks additively)
-        PercentMultiplicative = 300 // Apply percentage modifiers (stacks multiplicatively)
+    public enum StatModifierType {
+        Flat = 100,                  // Add/subtract a flat value
+        PercentAdditive = 200,       // Add percentage modifiers (stacks additively)
+        PercentMultiplicative = 300, // Apply percentage modifiers (stacks multiplicatively)
     }
-    
+
     /// <summary>
     /// Represents a modification to a character stat
     /// </summary>

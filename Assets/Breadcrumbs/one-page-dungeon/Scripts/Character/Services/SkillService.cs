@@ -348,8 +348,11 @@ namespace Breadcrumbs.Character.Services
                         // 스탯 증가 (버프로 적용)
                         if (target.Stats != null)
                         {
-                            StatModifier modifier = new StatModifier(value, StatModifierType.PercentAdd, caster, duration);
+                            // todo: fixme
+                            /*
+                            StatModifier modifier = new StatModifier(value, StatModifierType.PercentAdditive, caster, duration);
                             target.Stats.AddModifier(effect.TargetStat, modifier);
+                            // */
                         }
                         break;
                         
@@ -357,8 +360,11 @@ namespace Breadcrumbs.Character.Services
                         // 스탯 감소 (디버프로 적용)
                         if (target.Stats != null)
                         {
-                            StatModifier modifier = new StatModifier(-value, StatModifierType.PercentAdd, caster, duration);
+                            // todo: fixme
+                            /*
+                            StatModifier modifier = new StatModifier(-value, StatModifierType.PercentAdditive, caster, duration);
                             target.Stats.AddModifier(effect.TargetStat, modifier);
+                            // */
                         }
                         break;
                         

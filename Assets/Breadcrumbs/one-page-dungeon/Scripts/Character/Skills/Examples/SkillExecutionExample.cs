@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Breadcrumbs.Character.Services;
@@ -44,8 +45,11 @@ namespace Breadcrumbs.Character.Skills.Examples
                 return;
             }
             
+            Debug.Log("fixme!!");
+            /*
             // 캐릭터의 스킬 초기화
             skillService.InitializeCharacter(playerCharacter);
+            // */
             
             // 테스트용 스킬 배우기
             if (playerCharacter.ClassType == ClassType.Warrior)
