@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 
@@ -9,72 +8,54 @@ namespace Breadcrumbs.Utils {
         private TMP_Text outputText;
 
         // 테스트할 단어들
-        private readonly Dictionary<string, LanguageType> _testWords = new Dictionary<string, LanguageType> {
-            // 한국어 단어들
-            { "사과", LanguageType.Korean },
-            { "책상", LanguageType.Korean },
-            { "컴퓨터", LanguageType.Korean },
-            { "의자", LanguageType.Korean },
-
-            // 일본어 단어들
-            { "リンゴ", LanguageType.Japanese },    // 사과
-            { "机", LanguageType.Japanese },      // 책상
-            { "コンピュータ", LanguageType.Japanese }, // 컴퓨터
-            { "椅子", LanguageType.Japanese },     // 의자
-
-            // 영어 단어들
-            { "Apple", LanguageType.English },
-            { "Desk", LanguageType.English },
-            { "Computer", LanguageType.English },
-            { "Chair", LanguageType.English }
+        private readonly List<string> _testWords = new() {
+            "철수",
+            "철수0",
+            "철수1",
+            "철수3",
+            "철수4",
+            "철수5",
+            "철수6",
+            "철수7",
+            "철수8",
+            "철수9",
+            "상철",
+            "사과",
+            "책상",
+            "컴퓨터",
+            "의자",
+            "リンゴ",// 사과
+            "机",// 책상
+            "コンピュータ", // 컴퓨터
+            "椅子",     // 의자
+            "Apple",
+            "Desk",
+            "Computer",
+            "Chair",
+            "사람a",
+            "AnotherWord",
+            "슛팜b"
         };
 
         void Start() {
-            // 단어별 조사 적용 테스트
-            TestSingleWordPostpositions();
+            // 커스텀 테스트
+            TestCustom();
 
             // 메시지 처리 테스트
             TestMessageProcessing();
 
             // 키워드 맵 테스트
             TestKeywordMap();
-
-            // 커스텀 언어 처리기 등록 테스트
-            TestCustomLanguageProcessor();
         }
 
-        private void TestSingleWordPostpositions() {
+        private void TestCustom() {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.AppendLine("=== 단어별 조사 적용 테스트 ===\n");
-
-            foreach (var wordPair in _testWords) {
-                string word = wordPair.Key;
-                sb.AppendLine($"[{word}] 단어 테스트:");
-
-                // 주격 조사 (이/가, が, "")
-                sb.AppendLine($"  주격: {PostpositionProcessor.ApplyPostposition(word, PostpositionType.Subject)}");
-
-                // 주제 조사 (은/는, は, as for)
-                sb.AppendLine($"  주제: {PostpositionProcessor.ApplyPostposition(word, PostpositionType.Topic)}");
-
-                // 목적격 조사 (을/를, を, "")
-                sb.AppendLine($"  목적격: {PostpositionProcessor.ApplyPostposition(word, PostpositionType.Object)}");
-
-                // 동반 조사 (과/와, と, with)
-                sb.AppendLine($"  동반: {PostpositionProcessor.ApplyPostposition(word, PostpositionType.With)}");
-
-                // 방향 조사 (으로/로, へ, to)
-                sb.AppendLine($"  방향: {PostpositionProcessor.ApplyPostposition(word, PostpositionType.To)}");
-
-                // 소유격 조사 (의, の, 's)
-                sb.AppendLine($"  소유격: {PostpositionProcessor.ApplyPostposition(word, PostpositionType.Possessive)}\n");
+            sb.AppendLine("=== 커스텀 테스트 (Subject Only) ===\n");
+            foreach (var word in _testWords) {
+                sb.AppendLine(PostpositionProcessor.ApplyPostposition(word, "은/는"));
             }
-
             // 결과 출력
             Debug.Log(sb.ToString());
-
-            if (outputText != null)
-                outputText.text = sb.ToString();
         }
 
         private void TestMessageProcessing() {
@@ -96,8 +77,8 @@ namespace Breadcrumbs.Utils {
             sb.AppendLine();
 
             // 영어 메시지 테스트
-            string englishMessage = "Hello, {John:TopicMarker} is a student. He goes {school:To}. " +
-                                    "He studies {book:ObjectMarker} with {teacher:With}. {John:Possessive} desk is here.";
+            string englishMessage = "안녕, {John:은/는} 학생이야. 그는 {school:로} 가고 있어. " +
+                                    "그는 {book:을/를} 가이고 있어. {teacher:With}. {John:Possessive} desk is here.";
             sb.AppendLine("영어 원본: " + englishMessage);
             sb.AppendLine("처리 결과: " + PostpositionProcessor.ProcessMessage(englishMessage));
 
@@ -145,71 +126,6 @@ namespace Breadcrumbs.Utils {
 
             if (outputText != null)
                 outputText.text += "\n\n" + sb.ToString();
-        }
-
-        private void TestCustomLanguageProcessor() {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.AppendLine("=== 커스텀 언어 처리기 테스트 ===\n");
-
-            // 커스텀 언어 처리기 구현
-            SpanishProcessor spanishProcessor = new SpanishProcessor();
-
-            // 커스텀 언어 테스트 전 메시지
-            string spanishMessage = "Hola, {Juan:SubjectMarker} es un estudiante.";
-            sb.AppendLine("스페인어 처리기 등록 전: " + PostpositionProcessor.ProcessMessage(spanishMessage));
-
-            // 새 언어 처리기 등록
-            PostpositionProcessor.RegisterLanguageProcessor(LanguageType.Unknown, spanishProcessor);
-
-            // 등록 후 테스트
-            sb.AppendLine("스페인어 처리기 등록 후: " + PostpositionProcessor.ProcessMessage(spanishMessage));
-
-            // 결과 출력
-            Debug.Log(sb.ToString());
-
-            if (outputText != null)
-                outputText.text += "\n\n" + sb.ToString();
-        }
-
-        /// <summary>
-        /// 스페인어 처리기 예시 - 새 언어 추가 방법 데모용
-        /// </summary>
-        private class SpanishProcessor : PostpositionProcessor.ILanguageProcessor {
-            public string ApplyPostposition(string word, PostpositionType postpositionType) {
-                switch (postpositionType) {
-                    case PostpositionType.Subject:
-                        return word; // 스페인어에는 주격 조사가 없음
-                    case PostpositionType.Topic:
-                        return "en cuanto a " + word; // 주제 표시
-                    case PostpositionType.Object:
-                        return word; // 목적격 표시 없음
-                    case PostpositionType.With:
-                        return "con " + word; // ~와 함께
-                    case PostpositionType.To:
-                        return "a " + word; // ~로
-                    case PostpositionType.At:
-                        return "en " + word; // ~에서
-                    case PostpositionType.From:
-                        return "desde " + word; // ~로부터
-                    case PostpositionType.Possessive:
-                        return "de " + word; // ~의
-                    default:
-                        return word;
-                }
-            }
-
-            public string ProcessCustomPostposition(string word, string customPostposition) {
-                if (!customPostposition.Contains("/"))
-                    return customPostposition;
-
-                string[] options = customPostposition.Split('/');
-                if (options.Length != 2)
-                    return customPostposition;
-
-                // 스페인어는 마지막 글자에 따라 첫 번째 또는 두 번째 옵션 사용
-                char lastChar = word[^1];
-                return "aeiou".Contains(char.ToLower(lastChar)) ? options[1] : options[0];
-            }
         }
     }
 }

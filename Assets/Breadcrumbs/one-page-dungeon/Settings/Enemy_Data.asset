@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b677523050424b13b1e300c11be500a1, type: 3}
   m_Name: Enemy_Data
   m_EditorClassIdentifier: 
-  monsterName: Enemy
+  monsterName: "\uCCA0\uC218"
   monsterPrefab: {fileID: 1068789040133891354, guid: 0dab28c42ea623f4dac5d3141ee4b629, type: 3}
   baseHealth: 100
   baseDamage: 1
   baseSpeed: 3
   minimumDifficulty: 0
-  possibleDrops: []

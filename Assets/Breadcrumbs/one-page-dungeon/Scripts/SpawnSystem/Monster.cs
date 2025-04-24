@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Breadcrumbs.EventSystem;
 using Breadcrumbs.SpawnSystem.Events;
 using UnityEngine;
@@ -41,7 +42,11 @@ namespace Breadcrumbs.SpawnSystem {
         public GameObject SpawnableGameObject => gameObject;
 
         public void OnSpawned(SpawnPoint spawnPoint) {
-            Debug.Log($"{monsterData.monsterName}이(가) 스폰 되었습니다.");
+            const string template = "{Name:Subject} 스폰 되었습니다.";
+            var showMessage = Utils.PostpositionProcessor.ProcessMessage(template, new Dictionary<string, string>() {
+                { "Name", monsterData.monsterName }
+            });
+            Debug.Log(showMessage);
             /*
             // for what?
             throw new NotImplementedException();
@@ -50,7 +55,10 @@ namespace Breadcrumbs.SpawnSystem {
 
         public void OnDespawned() {
             _isAlive = false;
-            Debug.Log($"{monsterData.monsterName}이(가) 디스폰 되었습니다.");
+            const string template = "{Name:Subject} 디스폰 되었습니다.";
+            var showMessage = Utils.PostpositionProcessor.ProcessMessage(template, new Dictionary<string, string>() {
+                { "Name", monsterData.monsterName }
+            });
         }
 
         public void TakeDamage(int damage) {
