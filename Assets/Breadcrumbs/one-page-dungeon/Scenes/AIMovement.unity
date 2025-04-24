@@ -3367,9 +3367,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentDifficultySettings: {fileID: 11400000, guid: b75b07ee3c86c3d41b72cef4f1541c93, type: 2}
   spawnPointGroups:
-  - {fileID: 0}
-  - {fileID: 0}
-  poolManager: {fileID: 0}
+  - {fileID: 106617287}
+  poolManager: {fileID: 1450332960}
   showDebugInfo: 0
 --- !u!4 &942412764
 Transform:
@@ -5467,6 +5466,62 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1450332959
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1450332961}
+  - component: {fileID: 1450332960}
+  m_Layer: 0
+  m_Name: PoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1450332960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450332959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26d843cbe8d17544f9b97b1d52ae6698, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoUnparentOnAwake: 1
+  poolSettings:
+  - prefab: {fileID: 2042564127}
+    initialSize: 20
+    maxSize: 200
+    expandWhenFull: 1
+    unusedDespawnTime: 0
+  - prefab: {fileID: 1598883602}
+    initialSize: 20
+    maxSize: 200
+    expandWhenFull: 1
+    unusedDespawnTime: 0
+--- !u!4 &1450332961
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450332959}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1450777334
 GameObject:
   m_ObjectHideFlags: 0
@@ -6222,6 +6277,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596980378}
   m_CullTransparentMesh: 1
+--- !u!1 &1598883602 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 697890292109275221, guid: a67890c01def2004c9bf3cf1b294622f, type: 3}
+  m_PrefabInstance: {fileID: 8238513801463866493}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1611791022
 GameObject:
   m_ObjectHideFlags: 0
@@ -8447,5 +8507,6 @@ SceneRoots:
   - {fileID: 111874392}
   - {fileID: 920005045}
   - {fileID: 878652156}
+  - {fileID: 1450332961}
   - {fileID: 106617288}
   - {fileID: 1419292069}

@@ -53,7 +53,7 @@ namespace Breadcrumbs.SpawnSystem {
             }
             
             // Broadcast game start event
-            EventBehaviour.EventHandler.Dispatch(new GameStartEvent());
+            Dispatch(new GameStartEvent());
         }
         
         /// <summary>
