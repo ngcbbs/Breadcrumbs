@@ -5362,7 +5362,8 @@ GameObject:
   - component: {fileID: 1419292068}
   - component: {fileID: 1419292067}
   - component: {fileID: 1419292066}
-  - component: {fileID: 1419292065}
+  - component: {fileID: 1419292070}
+  - component: {fileID: 1419292071}
   m_Layer: 5
   m_Name: PostpositionTestCanvas
   m_TagString: Untagged
@@ -5370,19 +5371,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1419292065
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1419292064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d43d52580d2e4ae1b324513a7c425bfe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outputText: {fileID: 190892257}
 --- !u!114 &1419292066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5466,6 +5454,31 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1419292070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419292064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a8d9e0f055cbff42b9a93a9a3b6dfff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outputText: {fileID: 190892257}
+--- !u!114 &1419292071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419292064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b1f5c57b6686bf46a93fd4fcca87382, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1450332959
 GameObject:
   m_ObjectHideFlags: 0
