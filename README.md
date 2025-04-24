@@ -1,5 +1,7 @@
 # Breadcrumbs
 > Just dropping some breadcrumbs from my Unity6 + GitHub adventures.
+- 2024/04/25: 새로 추가된 시스템 테스중..
+  - 조사 처리 유틸리티 추가
 - 2024/04/24: 중복 시스템 제거 및 사양서에 따른 구현 추가중.
   - 스킬 시스템 추가
   - 인벤토리 시스템 추가
