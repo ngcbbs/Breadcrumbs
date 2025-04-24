@@ -2,10 +2,23 @@ using UnityEngine;
 
 namespace Breadcrumbs.SpawnSystem {
     /// <summary>
-    /// 스폰 가능한 오브젝트의 인터페이스
+    /// Interface for spawnable objects
     /// </summary>
     public interface ISpawnable {
-        void OnSpawned(Vector3 position, Quaternion rotation);
+        /// <summary>
+        /// Gets the GameObject associated with this spawnable
+        /// </summary>
+        GameObject SpawnableGameObject { get; }
+        
+        /// <summary>
+        /// Called when the object is spawned
+        /// </summary>
+        /// <param name="spawnPoint">The spawn point that spawned this object</param>
+        void OnSpawned(SpawnPoint spawnPoint);
+        
+        /// <summary>
+        /// Called when the object is despawned
+        /// </summary>
         void OnDespawned();
     }
 }

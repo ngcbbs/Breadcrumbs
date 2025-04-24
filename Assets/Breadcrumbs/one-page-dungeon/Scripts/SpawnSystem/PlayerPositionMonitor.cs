@@ -6,8 +6,11 @@ namespace Breadcrumbs.SpawnSystem {
     /// </summary>
     public class PlayerPositionMonitor : MonoBehaviour {
         private Transform _playerTransform;
+        
+        private SpawnManager _spawnManager;
 
         private void Start() {
+            _spawnManager = FindAnyObjectByType<SpawnManager>();
             _playerTransform = GetComponent<Transform>();
         }
 
@@ -20,8 +23,8 @@ namespace Breadcrumbs.SpawnSystem {
                 return;
 
             _timer = 0f;
-            if (SpawnManager.Instance != null) {
-                SpawnManager.Instance.CheckPlayerPositionForSpawn(_playerTransform.position);
+            if (_spawnManager != null) {
+                _spawnManager.CheckPlayerPositionForSpawn(_playerTransform.position);
             }
         }
     }

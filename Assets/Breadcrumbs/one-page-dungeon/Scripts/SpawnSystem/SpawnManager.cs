@@ -1,101 +1,102 @@
 using System.Collections.Generic;
+using Breadcrumbs.EventSystem;
 using Breadcrumbs.Singletons;
+using Breadcrumbs.SpawnSystem.Events;
+using Breadcrumbs.SpawnSystem.Strategies;
 using UnityEngine;
 
 namespace Breadcrumbs.SpawnSystem {
     /// <summary>
-    /// 스폰 매니저 - 싱글톤 패턴 적용
+    /// Enhanced spawn manager with event system integration
     /// </summary>
-    public class SpawnManager : PersistentSingleton<SpawnManager> {
-        //public static SpawnManager Instance { get; private set; }
-
-        [Header("난이도 설정")]
-        public DifficultySettings currentDifficultySettings;
+    public class SpawnManager : EventBehaviour {
+        [Header("Difficulty Settings")]
+        [SerializeField] private DifficultySettings currentDifficultySettings;
         public DifficultyLevel CurrentDifficulty => currentDifficultySettings.difficultyLevel;
+        public DifficultySettings CurrentDifficultySettings => currentDifficultySettings;
 
-        [Header("스폰 그룹")]
-        [SerializeField]
-        private List<SpawnPointGroup> spawnPointGroups = new List<SpawnPointGroup>();
+        [Header("Spawn Groups")]
+        [SerializeField] private List<SpawnPointGroup> spawnPointGroups = new List<SpawnPointGroup>();
 
-        // 오브젝트 풀링 관리 Dictionary
-        private Dictionary<int, Queue<GameObject>> _objectPools = new Dictionary<int, Queue<GameObject>>();
+        [Header("References")]
+        [SerializeField] private ObjectPoolManager poolManager;
 
-        // 스폰된 오브젝트 관리 Dictionary
+        // Spawned objects tracking
         private Dictionary<GameObject, SpawnPoint> _spawnedObjects = new Dictionary<GameObject, SpawnPoint>();
+        
+        // Strategy cache
+        private Dictionary<SpawnStrategyType, ISpawnStrategy> _strategies = new Dictionary<SpawnStrategyType, ISpawnStrategy>();
+
+        private void Awake() {
+            // Ensure we have an object pool manager
+            if (poolManager == null) {
+                poolManager = FindObjectOfType<ObjectPoolManager>();
+                if (poolManager == null) {
+                    var poolObj = new GameObject("Object Pool Manager");
+                    poolManager = poolObj.AddComponent<ObjectPoolManager>();
+                }
+            }
+           
+            // Initialize strategies
+            InitializeStrategies();
+        }
+
+        protected override void RegisterEventHandlers() {
+            Register(typeof(SpawnEvent), OnSpawn);
+            Register(typeof(DespawnEvent), OnDespawn);
+        }
 
         private void Start() {
-            // 모든 스폰 포인트 그룹 초기화
+            // Initialize all spawn point groups
             foreach (var group in spawnPointGroups) {
                 group.Initialize();
             }
+            
+            // Broadcast game start event
+            EventBehaviour.EventHandler.Dispatch(new GameStartEvent());
         }
-
-        [SerializeField] private int maxPoolSize = 100; // 풀당 최대 오브젝트 수
-
-        public GameObject GetObjectFromPool(GameObject prefab)
-        {
-            int prefabID = prefab.GetInstanceID();
-    
-            if (!_objectPools.ContainsKey(prefabID))
-            {
-                _objectPools[prefabID] = new Queue<GameObject>();
-            }
-    
-            GameObject obj;
-    
-            if (_objectPools[prefabID].Count > 0)
-            {
-                obj = _objectPools[prefabID].Dequeue();
-            }
-            else
-            {
-                obj = Instantiate(prefab);
-                obj.name = prefab.name + "_" + prefabID;
-            }
-    
-            return obj;
-        }
-
-        public void ReturnObjectToPool(GameObject prefab, GameObject obj)
-        {
-            int prefabID = prefab.GetInstanceID();
-    
-            if (!_objectPools.ContainsKey(prefabID))
-            {
-                _objectPools[prefabID] = new Queue<GameObject>();
-            }
-    
-            // 풀 크기 제한 확인
-            if (_objectPools[prefabID].Count < maxPoolSize)
-            {
-                _objectPools[prefabID].Enqueue(obj);
-            }
-            else
-            {
-                // 풀이 꽉 찼을 때 오브젝트 제거
-                Destroy(obj);
-            }
+        
+        /// <summary>
+        /// Initialize spawn strategies
+        /// </summary>
+        private void InitializeStrategies() {
+            _strategies[SpawnStrategyType.Default] = new DefaultSpawnStrategy();
+            _strategies[SpawnStrategyType.Wave] = new WaveSpawnStrategy(); // Using default parameters
+            // Add additional strategies as needed
         }
 
         /// <summary>
-        /// 스폰된 오브젝트를 등록합니다.
+        /// Get a spawn strategy of the specified type
+        /// </summary>
+        public ISpawnStrategy GetSpawnStrategy(SpawnStrategyType type) {
+            if (_strategies.TryGetValue(type, out var strategy)) {
+                return strategy;
+            }
+            
+            // Default to the default strategy if requested type is not found
+            return _strategies[SpawnStrategyType.Default];
+        }
+
+        /// <summary>
+        /// Register a spawned object with its spawn point
         /// </summary>
         public void RegisterSpawnedObject(SpawnPoint spawnPoint, GameObject spawnedObject) {
             _spawnedObjects[spawnedObject] = spawnPoint;
         }
 
         /// <summary>
-        /// 오브젝트가 제거될 때 처리합니다.
+        /// Handle despawning an object
         /// </summary>
         public void DespawnObject(GameObject obj) {
             if (_spawnedObjects.TryGetValue(obj, out SpawnPoint spawnPoint)) {
+                // The spawn point will handle the event publication
                 spawnPoint.HandleObjectDespawn(obj);
                 _spawnedObjects.Remove(obj);
             }
         }
 
         /// <summary>
-        /// 플레이어 위치를 기반으로 스폰 포인트를 활성화합니다.
+        /// Check player position to trigger spawn points
         /// </summary>
         public void CheckPlayerPositionForSpawn(Vector3 playerPosition) {
             foreach (var group in spawnPointGroups) {
@@ -112,12 +113,11 @@ namespace Breadcrumbs.SpawnSystem {
         }
         
         /// <summary>
-        /// 특정 이벤트가 발생했을 때 호출됩니다.
+        /// Trigger an event for spawn points
         /// </summary>
         public void TriggerEvent(SpawnTriggerType eventType, string eventId) {
             string eventKey = eventType.ToString();
-            if (!string.IsNullOrEmpty(eventId))
-            {
+            if (!string.IsNullOrEmpty(eventId)) {
                 eventKey += "_" + eventId;
             }
             
@@ -131,7 +131,7 @@ namespace Breadcrumbs.SpawnSystem {
         }
 
         /// <summary>
-        /// 특정 이벤트가 발생했을 때 호출됩니다.
+        /// Trigger a named event for spawn points
         /// </summary>
         public void TriggerEvent(string eventName) {
             foreach (var group in spawnPointGroups) {
@@ -144,35 +144,99 @@ namespace Breadcrumbs.SpawnSystem {
         }
 
         /// <summary>
-        /// 특정 영역의 스폰 포인트 그룹을 활성화합니다.
+        /// Activate a spawn point group
         /// </summary>
         public void ActivateSpawnPointGroup(string groupId) {
             foreach (var group in spawnPointGroups) {
                 if (group.GroupId == groupId) {
                     group.SetActive(true);
+                    // Publish event
+                    EventBehaviour.EventHandler.Dispatch(new SpawnGroupActivatedEvent(groupId));
                 }
             }
         }
 
         /// <summary>
-        /// 특정 영역의 스폰 포인트 그룹을 비활성화합니다.
+        /// Deactivate a spawn point group
         /// </summary>
         public void DeactivateSpawnPointGroup(string groupId) {
             foreach (var group in spawnPointGroups) {
                 if (group.GroupId == groupId) {
                     group.SetActive(false);
+                    // Publish event
+                    EventBehaviour.EventHandler.Dispatch(new SpawnGroupDeactivatedEvent(groupId));
                 }
             }
         }
 
         /// <summary>
-        /// 게임 난이도를 변경합니다.
+        /// Change the game difficulty
         /// </summary>
         public void ChangeDifficulty(DifficultySettings newDifficultySettings) {
             currentDifficultySettings = newDifficultySettings;
-
-            // 난이도 변경에 따른 추가 로직 실행 가능
-            Debug.Log($"난이도가 {newDifficultySettings.difficultyName}(으)로 변경되었습니다.");
+            
+            // Publish event
+            EventBehaviour.EventHandler.Dispatch(new DifficultyChangedEvent(
+                newDifficultySettings.difficultyLevel, 
+                newDifficultySettings
+            ));
+            
+            Debug.Log($"Difficulty changed to {newDifficultySettings.difficultyName}");
         }
+        
+        /// <summary>
+        /// Event handler implementation
+        /// </summary>
+        public void OnSpawn(IEvent @event) {
+            if (@event is SpawnEvent spawnEvent) {
+                Debug.Log($"Spawn event received: {spawnEvent.SpawnedObject.name} at {spawnEvent.SpawnPoint.name}");
+                RegisterSpawnedObject(spawnEvent.SpawnPoint, spawnEvent.SpawnedObject);
+            } 
+        }
+        
+        /// <summary>
+        /// Event handler implementation
+        /// </summary>
+        public void OnDespawn(IEvent @event) {
+            if (@event is DespawnEvent despawnEvent) {
+                Debug.Log($"Despawn event received: {despawnEvent.DespawnedObject.name}");
+                // Additional despawn handling here if needed
+            }
+        }
+        
+        #region Debug Tools
+        [Header("Debug")]
+        [SerializeField] private bool showDebugInfo = false;
+        
+        /// <summary>
+        /// Show debug info in the inspector
+        /// </summary>
+        private void OnGUI() {
+            if (!showDebugInfo) return;
+            
+            GUILayout.BeginArea(new Rect(10, 10, 300, 500));
+            GUILayout.Label("Spawn Manager Debug");
+            GUILayout.Label($"Current Difficulty: {CurrentDifficulty}");
+            GUILayout.Label($"Active Spawn Groups: {CountActiveGroups()}");
+            GUILayout.Label($"Active Spawned Objects: {_spawnedObjects.Count}");
+            
+            if (GUILayout.Button("Trigger Game Start Event")) {
+                EventBehaviour.EventHandler.Dispatch(new GameStartEvent());
+            }
+            
+            GUILayout.EndArea();
+        }
+        
+        /// <summary>
+        /// Count active spawn groups
+        /// </summary>
+        private int CountActiveGroups() {
+            int count = 0;
+            foreach (var group in spawnPointGroups) {
+                if (group.IsActive) count++;
+            }
+            return count;
+        }
+        #endregion
     }
 }

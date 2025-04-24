@@ -1,24 +1,31 @@
-using Breadcrumbs.Singletons;
+using Breadcrumbs.EventSystem;
 using Breadcrumbs.SpawnSystem;
 using UnityEngine;
 
 namespace Breadcrumbs.Scripts {
     [DefaultExecutionOrder(-200)]
-    public class GameManager : PersistentSingleton<GameManager> {
+    public class GameManager : EventBehaviour {
         [SerializeField]
         private DifficultySettings startDifficultySettings;
-        
-        protected override void Awake() {
-            base.Awake();
+
+        private SpawnManager _spawnManager;
+
+        private void Awake() {
             InitializeAllSystems();
             Debug.Log("GameManager Initialized...");
         }
 
-        private void InitializeAllSystems() {
-            SpawnManager.Instance.ChangeDifficulty(startDifficultySettings);
-        
-            // 시작 영역 활성화 (테스트)
-            SpawnManager.Instance.ActivateSpawnPointGroup("StartingArea");
+        private void Start() {
+            _spawnManager = FindAnyObjectByType<SpawnManager>();
         }
+
+        private void InitializeAllSystems() {
+            if (_spawnManager != null) {
+                _spawnManager.ChangeDifficulty(startDifficultySettings);
+                _spawnManager.ActivateSpawnPointGroup("StartingArea");
+            }
+        }
+
+        protected override void RegisterEventHandlers() { }
     }
 }

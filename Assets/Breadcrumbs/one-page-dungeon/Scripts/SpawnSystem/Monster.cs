@@ -1,24 +1,48 @@
+using System;
+using Breadcrumbs.EventSystem;
+using Breadcrumbs.SpawnSystem.Events;
 using UnityEngine;
 
 namespace Breadcrumbs.SpawnSystem {
     /// <summary>
     /// 몬스터 클래스 예시
     /// </summary>
-    public class Monster : MonoBehaviour, ISpawnable {
+    public class Monster : EventBehaviour, ISpawnable {
         public MonsterData monsterData;
 
         private int _currentHealth;
         private bool _isAlive = false;
+        
+        private SpawnManager _spawnManager;
+
+        private void Start() {
+            _spawnManager = FindAnyObjectByType<SpawnManager>();
+        }
+
+        protected override void RegisterEventHandlers() {
+            // 몬스터 관련 이벤트 핸들러 등록
+        }
 
         public void OnSpawned(Vector3 position, Quaternion rotation) {
             _isAlive = true;
 
             // 난이도에 따른 스탯 적용
-            DifficultySettings difficulty = SpawnManager.Instance.currentDifficultySettings;
-            _currentHealth = Mathf.RoundToInt(monsterData.baseHealth * difficulty.monsterHealthMultiplier);
+            if (_spawnManager != null && _spawnManager.CurrentDifficultySettings != null) {
+                var difficulty = _spawnManager.CurrentDifficultySettings;
+                _currentHealth = Mathf.RoundToInt(monsterData.baseHealth * difficulty.monsterHealthMultiplier);
+            } else {
+                _currentHealth = monsterData.baseHealth;
+            }
 
             // 추가 초기화 로직
             Debug.Log($"{monsterData.monsterName}이(가) {position}에 스폰되었습니다. 체력: {_currentHealth}");
+        }
+
+        public GameObject SpawnableGameObject => gameObject;
+
+        public void OnSpawned(SpawnPoint spawnPoint) {
+            // for what?
+            throw new NotImplementedException();
         }
 
         public void OnDespawned() {
@@ -40,7 +64,7 @@ namespace Breadcrumbs.SpawnSystem {
             DropItems();
 
             // 죽음 처리 - SpawnManager에 알림
-            SpawnManager.Instance.DespawnObject(gameObject);
+            Dispatch(new DespawnEvent(gameObject));
         }
 
         private void DropItems() {

@@ -6,7 +6,7 @@ namespace Breadcrumbs.SpawnSystem {
     /// SpawnManager 컴포넌트의 커스텀 에디터
     /// </summary>
     [CustomEditor(typeof(SpawnManager))]
-    public class SpawnManagerEditor : Editor {
+    public class SpawnManagerEditor : UnityEditor.Editor {
         public override void OnInspectorGUI() {
             DrawDefaultInspector();
 

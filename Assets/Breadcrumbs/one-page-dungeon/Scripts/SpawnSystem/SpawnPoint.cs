@@ -1,152 +1,289 @@
 using System.Collections;
 using System.Collections.Generic;
+using Breadcrumbs.EventSystem;
+using Breadcrumbs.SpawnSystem.Events;
+using Breadcrumbs.SpawnSystem.Strategies;
 using UnityEngine;
 
 namespace Breadcrumbs.SpawnSystem {
     /// <summary>
-    /// 스폰 포인트 기본 클래스
+    /// Enhanced spawn point that implements ISpawnPoint and uses the event system
     /// </summary>
-    public class SpawnPoint : MonoBehaviour {
-        [Header("기본 설정")]
-        public SpawnableObjectType SpawnType;
-        public GameObject SpawnPrefab;
+    public class SpawnPoint : EventBehaviour, ISpawnPoint {
+        [Header("Basic Settings")]
+        [SerializeField] private SpawnableObjectType spawnType;
+        [SerializeField] private GameObject spawnPrefab;
 
-        [Header("스폰 조건")]
-        public SpawnTriggerType SpawnTrigger = SpawnTriggerType.None;
-        public float SpawnDelay = 0f;
-        public DifficultyLevel RequiredDifficulty = DifficultyLevel.Beginner;
-        public bool respawnAfterDeath = true;
-        public float respawnTime = 30f;
+        [Header("Spawn Conditions")]
+        [SerializeField] private SpawnTriggerType spawnTrigger = SpawnTriggerType.None;
+        [SerializeField] private float spawnDelay = 0f;
+        [SerializeField] private DifficultyLevel minimumDifficulty = DifficultyLevel.Beginner;
+        [SerializeField] private bool respawnAfterDeath = true;
+        [SerializeField] private float respawnTime = 30f;
 
-        [Header("스폰 속성")]
-        public Quaternion InitialRotation = Quaternion.identity;
-        public float PositionRandomRange = 0f;
-        public Bounds TriggerArea = new Bounds(Vector3.zero, new Vector3(5, 5, 5));
+        [Header("Spawn Properties")]
+        [SerializeField] private Quaternion initialRotation = Quaternion.identity;
+        [SerializeField] private float positionRandomRange = 0f;
+        [SerializeField] private Bounds triggerArea = new Bounds(Vector3.zero, new Vector3(5, 5, 5));
 
-        [Header("스폰 제한")]
-        public int maxSpawnCount = 1;
-        public bool isActive = true;
+        [Header("Spawn Limits")]
+        [SerializeField] private int maxSpawnCount = 1;
+        [SerializeField] private bool isActive = true;
 
-        // 내부 상태 변수
+        [Header("Spawn Strategy")]
+        [SerializeField] private SpawnStrategyType strategyType = SpawnStrategyType.Default;
+        [SerializeField] private int enemiesPerWave = 3;
+        [SerializeField] private float timeBetweenSpawns = 0.5f;
+        [SerializeField] private float timeBetweenWaves = 5f;
+        [SerializeField] private int maxWaves = 3;
+
+        // Internal state variables
         private int _currentSpawnCount = 0;
         private bool _triggerActivated = false;
         private float _lastSpawnTime = 0f;
         private List<GameObject> _spawnedObjects = new List<GameObject>();
+        private ISpawnStrategy _spawnStrategy;
 
-        private void OnDrawGizmos() {
-            // 에디터에서 스폰 영역 시각화
-            Gizmos.color = isActive ? new Color(0, 1, 0, 0.3f) : new Color(1, 0, 0, 0.3f);
-            Gizmos.DrawCube(transform.position + TriggerArea.center, TriggerArea.size);
+        #region Properties
+        public SpawnTriggerType SpawnTrigger => spawnTrigger;
+        public bool IsActive => isActive && _currentSpawnCount < maxSpawnCount;
+        public Vector3 SpawnPosition => transform.position;
+        public Quaternion SpawnRotation => initialRotation;
+        public DifficultyLevel MinimumDifficulty => minimumDifficulty;
+        
+        /// <summary>
+        /// Get the trigger area relative to this spawn point's position
+        /// </summary>
+        public Bounds GetTriggerArea() {
+            return triggerArea;
+        }
+        
+        /// <summary>
+        /// Set the spawn rotation
+        /// </summary>
+        public void SetSpawnRotation(Quaternion rotation) {
+            initialRotation = rotation;
+        }
+        #endregion
+
+        private void Awake() {
+            InitializeSpawnStrategy();
         }
 
-        /// <summary>
-        /// 스폰 포인트가 활성화되었는지 확인합니다.
-        /// </summary>
-        public bool IsActive() {
-            return isActive && _currentSpawnCount < maxSpawnCount;
+        private void InitializeSpawnStrategy() {
+            switch (strategyType) {
+                case SpawnStrategyType.Wave:
+                    _spawnStrategy = new WaveSpawnStrategy(enemiesPerWave, timeBetweenSpawns, timeBetweenWaves, maxWaves);
+                    break;
+                case SpawnStrategyType.RandomSelection:
+                    // Example of how you might set up a random selection strategy
+                    // In practice, you would likely configure this through the inspector
+                    List<GameObject> options = new List<GameObject> { spawnPrefab };
+                    _spawnStrategy = new RandomSelectionStrategy(options);
+                    break;
+                case SpawnStrategyType.Default:
+                default:
+                    _spawnStrategy = new DefaultSpawnStrategy();
+                    break;
+            }
         }
 
-        /// <summary>
-        /// 특정 난이도 조건을 충족하는지 확인합니다.
-        /// </summary>
-        public bool MeetsDifficultyRequirement(DifficultyLevel currentDifficulty) {
-            return (int)currentDifficulty >= (int)RequiredDifficulty;
+        protected override void RegisterEventHandlers() {
+            Register(typeof(GameStartEvent), OnGameStart);
+            Register(typeof(DifficultyChangedEvent), OnDifficultyChanged);
+            Register(typeof(SpawnGroupActivatedEvent), OnSpawnGroupActivated);
+            Register(typeof(SpawnGroupDeactivatedEvent), OnSpawnGroupDeactivated);
         }
 
-        /// <summary>
-        /// 주어진 위치가 트리거 영역 내에 있는지 확인합니다.
-        /// </summary>
-        public bool IsInTriggerArea(Vector3 position) {
-            return TriggerArea.Contains(position - transform.position);
+        private void OnGameStart(IEvent evt) {
+            // Any initialization logic when game starts
+            if (spawnTrigger == SpawnTriggerType.GameStart) {
+                TriggerSpawn();
+            }
         }
 
-        /// <summary>
-        /// 스폰 프로세스를 시작합니다.
-        /// </summary>
-        public void TriggerSpawn() {
-            if (!_triggerActivated && IsActive()) {
-                _triggerActivated = true;
-
-                if (SpawnDelay > 0) {
-                    StartCoroutine(SpawnWithDelay());
-                } else {
-                    SpawnObject();
+        private void OnDifficultyChanged(IEvent evt) {
+            var diffEvent = evt as DifficultyChangedEvent;
+            if (diffEvent != null) {
+                // Check if new difficulty meets our requirements
+                if (MeetsDifficultyRequirement(diffEvent.NewDifficulty) && 
+                    spawnTrigger == SpawnTriggerType.DifficultyChange) {
+                    TriggerSpawn();
                 }
             }
         }
 
+        private void OnSpawnGroupActivated(IEvent evt) {
+            var groupEvent = evt as SpawnGroupActivatedEvent;
+            if (groupEvent != null) {
+                // If this spawn point belongs to the activated group
+                if (transform.parent != null && 
+                    transform.parent.GetComponent<SpawnPointGroup>() != null && 
+                    transform.parent.GetComponent<SpawnPointGroup>().GroupId == groupEvent.GroupId) {
+                    SetActive(true);
+                }
+            }
+        }
+
+        private void OnSpawnGroupDeactivated(IEvent evt) {
+            var groupEvent = evt as SpawnGroupDeactivatedEvent;
+            if (groupEvent != null) {
+                // If this spawn point belongs to the deactivated group
+                if (transform.parent != null && 
+                    transform.parent.GetComponent<SpawnPointGroup>() != null && 
+                    transform.parent.GetComponent<SpawnPointGroup>().GroupId == groupEvent.GroupId) {
+                    SetActive(false);
+                }
+            }
+        }
+
+        private void OnDrawGizmos() {
+            // Visualize spawn area in editor
+            Gizmos.color = isActive ? new Color(0, 1, 0, 0.3f) : new Color(1, 0, 0, 0.3f);
+            Gizmos.DrawCube(transform.position + triggerArea.center, triggerArea.size);
+            
+            // Draw spawn direction arrow
+            Gizmos.color = Color.blue;
+            Gizmos.DrawRay(transform.position, initialRotation * Vector3.forward * 2f);
+        }
+
+        #region ISpawnPoint Implementation
         /// <summary>
-        /// 딜레이 후 스폰을 실행합니다.
+        /// Check if spawn point meets the difficulty requirement
         /// </summary>
-        private IEnumerator SpawnWithDelay() {
-            yield return new WaitForSeconds(SpawnDelay);
-            SpawnObject();
-            _triggerActivated = false;
+        public bool MeetsDifficultyRequirement(DifficultyLevel currentDifficulty) {
+            return (int)currentDifficulty >= (int)minimumDifficulty;
         }
 
         /// <summary>
-        /// 오브젝트 스폰을 실행합니다.
+        /// Check if a position is within the trigger area
         /// </summary>
-        private void SpawnObject() {
-            Vector3 spawnPosition = transform.position;
-
-            // 랜덤 위치 적용 (설정된 경우)
-            if (PositionRandomRange > 0) {
-                Vector3 randomOffset = new Vector3(
-                    UnityEngine.Random.Range(-PositionRandomRange, PositionRandomRange),
-                    0,
-                    UnityEngine.Random.Range(-PositionRandomRange, PositionRandomRange)
-                );
-                spawnPosition += randomOffset;
-            }
-
-            // 오브젝트 풀링 사용 (SpawnManager를 통해)
-            GameObject spawnedObject = SpawnManager.Instance.GetObjectFromPool(SpawnPrefab);
-            spawnedObject.transform.position = spawnPosition;
-            spawnedObject.transform.rotation = InitialRotation;
-            spawnedObject.SetActive(true);
-
-            // ISpawnable 인터페이스 호출
-            ISpawnable spawnable = spawnedObject.GetComponent<ISpawnable>();
-            if (spawnable != null) {
-                spawnable.OnSpawned(spawnPosition, InitialRotation);
-            }
-
-            _spawnedObjects.Add(spawnedObject);
-            _currentSpawnCount++;
-            _lastSpawnTime = Time.time;
-
-            // SpawnManager에게 관리 등록
-            SpawnManager.Instance.RegisterSpawnedObject(this, spawnedObject);
+        public bool IsInTriggerArea(Vector3 position) {
+            return triggerArea.Contains(position - transform.position);
         }
 
         /// <summary>
-        /// 스폰된 오브젝트 제거를 처리합니다.
+        /// Trigger the spawn process
+        /// </summary>
+        public GameObject TriggerSpawn() {
+            if (!_triggerActivated && IsActive) {
+                _triggerActivated = true;
+
+                if (spawnDelay > 0) {
+                    StartCoroutine(SpawnWithDelay());
+                    return null; // Will spawn later
+                } else {
+                    return SpawnObject();
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Handle when an object spawned from this point is despawned
         /// </summary>
         public void HandleObjectDespawn(GameObject despawnedObject) {
             if (_spawnedObjects.Contains(despawnedObject)) {
                 _spawnedObjects.Remove(despawnedObject);
                 _currentSpawnCount--;
 
-                // ISpawnable 인터페이스 호출
+                // Call OnDespawned on the ISpawnable interface
                 ISpawnable spawnable = despawnedObject.GetComponent<ISpawnable>();
                 if (spawnable != null) {
                     spawnable.OnDespawned();
                 }
 
-                // 리스폰 설정이 되어 있으면 리스폰 예약
+                // Publish despawn event
+                Dispatch(new DespawnEvent(despawnedObject));
+
+                // Return object to pool
+                despawnedObject.SetActive(false);
+                ObjectPoolManager.Instance.ReturnObjectToPool(spawnPrefab, despawnedObject);
+
+                // Schedule respawn if configured
                 if (respawnAfterDeath && isActive) {
                     StartCoroutine(RespawnAfterDelay(respawnTime));
                 }
-
-                // 오브젝트를 비활성화하고 풀에 반환
-                despawnedObject.SetActive(false);
-                SpawnManager.Instance.ReturnObjectToPool(SpawnPrefab, despawnedObject);
             }
         }
 
         /// <summary>
-        /// 지정된 딜레이 후 리스폰을 실행합니다.
+        /// React to an event trigger
+        /// </summary>
+        public void OnEventTriggered(string eventKey) {
+            if (spawnTrigger == SpawnTriggerType.Event && isActive) {
+                TriggerSpawn();
+            }
+        }
+
+        /// <summary>
+        /// Set the active state of this spawn point
+        /// </summary>
+        public void SetActive(bool active) {
+            isActive = active;
+        }
+        #endregion
+
+        #region Spawn Implementation
+        /// <summary>
+        /// Execute spawn with delay
+        /// </summary>
+        private IEnumerator SpawnWithDelay() {
+            yield return new WaitForSeconds(spawnDelay);
+            SpawnObject();
+            _triggerActivated = false;
+        }
+
+        /// <summary>
+        /// Execute the spawn process
+        /// </summary>
+        private GameObject SpawnObject() {
+            Vector3 spawnPosition = transform.position;
+
+            // Apply random position if configured
+            if (positionRandomRange > 0) {
+                Vector3 randomOffset = new Vector3(
+                    Random.Range(-positionRandomRange, positionRandomRange),
+                    0,
+                    Random.Range(-positionRandomRange, positionRandomRange)
+                );
+                spawnPosition += randomOffset;
+            }
+
+            // Use the spawn strategy
+            GameObject spawnedObject = _spawnStrategy.Execute(this, spawnPrefab);
+            
+            if (spawnedObject == null) {
+                Debug.LogWarning($"Failed to spawn object from {gameObject.name}");
+                return null;
+            }
+
+            // Process spawned object
+            RegisterSpawnedObject(spawnedObject);
+            
+            return spawnedObject;
+        }
+
+        /// <summary>
+        /// Register and configure a spawned object
+        /// </summary>
+        public void RegisterSpawnedObject(GameObject spawnedObject) {
+            // Call OnSpawned on the ISpawnable interface
+            ISpawnable spawnable = spawnedObject.GetComponent<ISpawnable>();
+            if (spawnable != null) {
+                spawnable.OnSpawned(this);
+            }
+
+            _spawnedObjects.Add(spawnedObject);
+            _currentSpawnCount++;
+            _lastSpawnTime = Time.time;
+            
+            // Publish spawn event
+            Dispatch(new SpawnEvent(spawnedObject, this));
+        }
+
+        /// <summary>
+        /// Handle respawn after delay
         /// </summary>
         private IEnumerator RespawnAfterDelay(float delay) {
             yield return new WaitForSeconds(delay);
@@ -155,21 +292,6 @@ namespace Breadcrumbs.SpawnSystem {
                 SpawnObject();
             }
         }
-
-        /// <summary>
-        /// 스폰 포인트를 활성화/비활성화합니다.
-        /// </summary>
-        public void SetActive(bool active) {
-            isActive = active;
-        }
-
-        /// <summary>
-        /// 이벤트에 반응하여 스폰을 시도합니다.
-        /// </summary>
-        public void OnEventTriggered(string eventName) {
-            if (SpawnTrigger == SpawnTriggerType.Event && isActive) {
-                TriggerSpawn();
-            }
-        }
+        #endregion
     }
 }
