@@ -22,10 +22,10 @@ namespace Breadcrumbs.SpawnSystem {
         [SerializeField] private ObjectPoolManager poolManager;
 
         // Spawned objects tracking
-        private Dictionary<GameObject, SpawnPoint> _spawnedObjects = new Dictionary<GameObject, SpawnPoint>();
+        private readonly Dictionary<GameObject, SpawnPoint> _spawnedObjects = new Dictionary<GameObject, SpawnPoint>();
         
         // Strategy cache
-        private Dictionary<SpawnStrategyType, ISpawnStrategy> _strategies = new Dictionary<SpawnStrategyType, ISpawnStrategy>();
+        private readonly Dictionary<SpawnStrategyType, ISpawnStrategy> _strategies = new Dictionary<SpawnStrategyType, ISpawnStrategy>();
 
         private void Awake() {
             // Ensure we have an object pool manager

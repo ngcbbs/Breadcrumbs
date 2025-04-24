@@ -7,6 +7,6 @@ namespace Breadcrumbs.SpawnSystem {
         Item,
         Player,
         Boss,
-        NPC
+        Npc
     }
 }

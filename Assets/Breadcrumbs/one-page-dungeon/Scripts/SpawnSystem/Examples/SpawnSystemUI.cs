@@ -1,3 +1,4 @@
+using Breadcrumbs.DependencyInjection;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -44,6 +45,7 @@ namespace Breadcrumbs.SpawnSystem.Examples {
         private int _spawnCount = 0;
         private int _despawnCount = 0;
         
+        [Inject] private IDifficultyManagerService _difficultyManagerService;
         private SpawnManager _spawnManager;
 
         private void Start() {
@@ -97,12 +99,13 @@ namespace Breadcrumbs.SpawnSystem.Examples {
 
         private void UpdateUI() {
             // Update difficulty text
-            if (difficultyText != null && _difficultyManager != null) {
-                var diff = _difficultyManager.CurrentDifficulty;
-                difficultyText.text = diff != null
-                    ? $"Difficulty: {diff.difficultyName} ({diff.difficultyLevel})"
+            var difficultySettings = _difficultyManagerService.GetDifficultySettings();
+            if (difficultyText != null && difficultySettings != null) {
+                var hasSettings = difficultySettings != null;
+                difficultyText.text = hasSettings
+                    ? $"Difficulty: {difficultySettings.difficultyName} ({difficultySettings.difficultyLevel})"
                     : "Difficulty: Not Set";
-            }
+            } 
 
             // Update status text
             if (statusText != null) {

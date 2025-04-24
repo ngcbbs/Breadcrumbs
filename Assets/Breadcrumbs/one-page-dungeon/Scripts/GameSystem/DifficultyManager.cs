@@ -1,5 +1,4 @@
 using Breadcrumbs.EventSystem;
-using Breadcrumbs.Singletons;
 using Breadcrumbs.SpawnSystem;
 using Breadcrumbs.SpawnSystem.Events;
 using UnityEngine;
@@ -8,7 +7,7 @@ namespace Breadcrumbs.GameSystem {
     /// <summary>
     /// Manager for game difficulty settings that works with the event system
     /// </summary>
-    public class DifficultyManager : EventBehaviour {
+    public class DifficultyManager : EventBehaviour, IDifficultyManagerService {
         [Header("Settings")]
         [SerializeField]
         private DifficultySettings[] availableDifficulties;
@@ -17,8 +16,9 @@ namespace Breadcrumbs.GameSystem {
 
         private DifficultySettings _currentDifficulty;
 
-        public DifficultySettings CurrentDifficulty => _currentDifficulty;
-        public DifficultyLevel CurrentDifficultyLevel => _currentDifficulty?.difficultyLevel ?? DifficultyLevel.Beginner;
+        public DifficultySettings GetDifficultySettings() {
+            return _currentDifficulty;
+        }
 
         private void Awake() {
             // Set up the default difficulty

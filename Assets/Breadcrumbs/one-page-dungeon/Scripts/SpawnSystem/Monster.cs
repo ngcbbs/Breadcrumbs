@@ -41,8 +41,11 @@ namespace Breadcrumbs.SpawnSystem {
         public GameObject SpawnableGameObject => gameObject;
 
         public void OnSpawned(SpawnPoint spawnPoint) {
+            Debug.Log($"{monsterData.monsterName}이(가) 스폰 되었습니다.");
+            /*
             // for what?
             throw new NotImplementedException();
+            // */
         }
 
         public void OnDespawned() {
