@@ -111,7 +111,7 @@ namespace GamePortfolio.Gameplay.Environment {
                 Rigidbody rb = hitCollider.GetComponent<Rigidbody>();
                 if (rb != null && !rb.isKinematic) {
                     // For rigidbodies, add velocity
-                    Vector3 rbVelocity = rb.velocity;
+                    Vector3 rbVelocity = rb.linearVelocity;
 
                     // Only modify horizontal movement, let gravity handle vertical
                     rbVelocity.x = velocity.x;
@@ -122,7 +122,7 @@ namespace GamePortfolio.Gameplay.Environment {
                         rbVelocity.y = Mathf.Max(velocity.y, rbVelocity.y);
                     }
 
-                    rb.velocity = rbVelocity;
+                    rb.linearVelocity = rbVelocity;
                 }
             }
         }

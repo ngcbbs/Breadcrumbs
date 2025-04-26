@@ -94,7 +94,7 @@ namespace GamePortfolio.Gameplay.Traps
                 if (dartRb != null)
                 {
                     // Apply forward force
-                    dartRb.velocity = firePoint.forward * dartSpeed;
+                    dartRb.linearVelocity = firePoint.forward * dartSpeed;
                 }
                 
                 // Set up damage component

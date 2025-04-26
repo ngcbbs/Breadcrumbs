@@ -1,4 +1,5 @@
 using System;
+using MessagePack;
 using UnityEngine;
 
 namespace GamePortfolio.Dungeon.Generation
@@ -127,18 +128,29 @@ namespace GamePortfolio.Dungeon.Generation
     /// <summary>
     /// Serializable room data for network transmission and saving
     /// </summary>
+    [MessagePackObject]
     [Serializable]
     public class RoomData
     {
+        [Key(0)]
         public int X;
+        [Key(1)]
         public int Y;
+        [Key(2)]
         public int Width;
+        [Key(3)]
         public int Height;
+        [Key(4)]
         public RoomType Type;
+        [Key(5)]
         public bool IsDiscovered;
+        [Key(6)]
         public string CustomProperties;
+        [Key(7)]
         public int EnemyCount;
+        [Key(8)]
         public bool IsCleared;
+        [Key(9)]
         public int TreasureLevel;
         
         /// <summary>

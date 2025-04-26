@@ -84,7 +84,7 @@ namespace GamePortfolio.Network.Synchronization {
             LastSyncedPosition = transform.position;
             LastSyncedRotation = transform.rotation;
             if (rb != null) {
-                LastSyncedVelocity = rb.velocity;
+                LastSyncedVelocity = rb.linearVelocity;
             }
 
             // Register default action handlers
@@ -137,13 +137,13 @@ namespace GamePortfolio.Network.Synchronization {
                         Vector3 targetVelocity = direction.normalized * ((distanceToTarget / InterpolationDuration) * extrapolationMultiplier);
 
                         // Limit maximum correction velocity
-                        float maxVelocityMagnitude = rb.velocity.magnitude + 5f;
+                        float maxVelocityMagnitude = rb.linearVelocity.magnitude + 5f;
                         if (targetVelocity.magnitude > maxVelocityMagnitude) {
                             targetVelocity = targetVelocity.normalized * maxVelocityMagnitude;
                         }
 
                         // Apply velocity
-                        rb.velocity = Vector3.Lerp(rb.velocity, targetVelocity, Time.fixedDeltaTime * positionLerpSpeed);
+                        rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetVelocity, Time.fixedDeltaTime * positionLerpSpeed);
                     }
 
                     // Apply rotation

@@ -258,7 +258,7 @@ namespace GamePortfolio.Gameplay.AI {
 
                 if (dartRb != null) {
                     // Apply forward force
-                    dartRb.velocity = firePoint.forward * dartSpeed;
+                    dartRb.linearVelocity = firePoint.forward * dartSpeed;
                 }
 
                 // Set up damage component

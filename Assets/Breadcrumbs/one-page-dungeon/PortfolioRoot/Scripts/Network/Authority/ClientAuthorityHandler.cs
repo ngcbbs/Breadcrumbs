@@ -59,7 +59,7 @@ namespace GamePortfolio.Network.Authority {
 
             Rigidbody rb = GetComponent<Rigidbody>();
             if (rb != null) {
-                lastValidVelocity = rb.velocity;
+                lastValidVelocity = rb.linearVelocity;
             }
         }
 
@@ -219,7 +219,7 @@ namespace GamePortfolio.Network.Authority {
             // Immediately snap rigidbody if present
             Rigidbody rb = GetComponent<Rigidbody>();
             if (rb != null) {
-                rb.velocity = Vector3.zero;
+                rb.linearVelocity = Vector3.zero;
             }
         }
 

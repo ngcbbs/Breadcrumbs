@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MessagePack;
 using UnityEngine;
 
 namespace GamePortfolio.Dungeon.Generation
@@ -209,21 +210,28 @@ namespace GamePortfolio.Dungeon.Generation
     /// <summary>
     /// Serializable corridor data for network transmission and saving
     /// </summary>
+    [MessagePackObject]
     [Serializable]
     public class CorridorData
     {
+        [Key(0)]
         public List<Vector2IntData> Path;
+        [Key(1)]
         public int Width;
+        [Key(2)]
         public bool HasDoors;
     }
     
     /// <summary>
     /// Serializable Vector2Int for network transmission and saving
     /// </summary>
+    [MessagePackObject]
     [Serializable]
     public class Vector2IntData
     {
+        [Key(0)]
         public int X;
+        [Key(1)]
         public int Y;
         
         public Vector2Int ToVector2Int()

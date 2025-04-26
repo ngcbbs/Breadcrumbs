@@ -70,7 +70,7 @@ namespace GamePortfolio.Gameplay.AI {
                 Rigidbody rb = projectile.GetComponent<Rigidbody>();
                 if (rb != null) {
                     Vector3 direction = (target.position - firePoint.position).normalized;
-                    rb.velocity = direction * projectileSpeed;
+                    rb.linearVelocity = direction * projectileSpeed;
 
                     // Destroy after time if no other logic
                     Destroy(projectile, 5f);
@@ -90,7 +90,7 @@ namespace GamePortfolio.Gameplay.AI {
                 float timeToReach = distanceToTarget / projectileSpeed;
 
                 // Predict position based on current velocity
-                return target.position + targetRb.velocity * timeToReach;
+                return target.position + targetRb.linearVelocity * timeToReach;
             }
 
             return target.position;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MessagePack;
 using UnityEngine;
 
 namespace GamePortfolio.Dungeon.Generation
@@ -430,13 +431,19 @@ namespace GamePortfolio.Dungeon.Generation
     /// <summary>
     /// Serializable dungeon data for network transmission and saving
     /// </summary>
+    [MessagePackObject]
     [Serializable]
     public class DungeonData
     {
+        [Key(0)]
         public int Width;
+        [Key(1)]
         public int Height;
+        [Key(2)]
         public int Seed;
+        [Key(3)]
         public List<RoomData> Rooms;
+        [Key(4)]
         public List<CorridorData> Corridors;
     }
 }
